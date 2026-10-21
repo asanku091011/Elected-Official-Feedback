@@ -2,32 +2,43 @@ import React from 'react';
 import { Pressable, Text, StyleSheet } from 'react-native';
 import { colors, spacing, radius, font } from '../theme';
 
+// Teal is the primary action color. Its label is ink, never white: #0E1014 on
+// #38CBD0 is 9.6:1, while white on teal would fail. White text is only used on
+// the deep teal, which clears AA.
 const VARIANTS = {
   primary: {
-    container: { backgroundColor: colors.navy },
-    label: { color: colors.white },
+    container: {
+      backgroundColor: colors.teal,
+      borderWidth: 2,
+      borderColor: colors.ink,
+    },
+    label: { color: colors.ink },
   },
-  amber: {
-    container: { backgroundColor: colors.amber },
-    label: { color: colors.black },
+  deep: {
+    container: {
+      backgroundColor: colors.tealDeep,
+      borderWidth: 2,
+      borderColor: colors.tealDeep,
+    },
+    label: { color: colors.white },
   },
   secondary: {
     container: {
       backgroundColor: colors.white,
-      borderWidth: 1,
-      borderColor: colors.border,
+      borderWidth: 2,
+      borderColor: colors.ink,
     },
     label: { color: colors.ink },
   },
   ghost: {
-    container: { backgroundColor: 'transparent' },
-    label: { color: colors.navy },
+    container: { backgroundColor: 'transparent', borderWidth: 2, borderColor: 'transparent' },
+    label: { color: colors.tealDeep },
   },
   danger: {
     container: {
       backgroundColor: colors.white,
-      borderWidth: 1,
-      borderColor: 'rgba(163, 35, 28, 0.35)',
+      borderWidth: 2,
+      borderColor: colors.danger,
     },
     label: { color: colors.danger },
   },
@@ -83,12 +94,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   pressed: {
-    opacity: 0.82,
+    opacity: 0.78,
   },
   disabled: {
     opacity: 0.45,
   },
   label: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
     textAlign: 'center',

@@ -1,19 +1,23 @@
-# Civic — find the office that can actually act
+<img src="assets/branding/civlink-logo.png" alt="CivLink logo" width="110" align="left" hspace="16" vspace="8" />
+
+# CivLink — find the office that can actually act
 
 A mobile app that helps a Northern Virginia resident figure out which office of government handles
 their concern, then write a clear message and send it through that office's own contact page.
 
 Built for the **2026 Congressional App Challenge** — Virginia's 10th District.
 
+<br clear="left" />
+
 ---
 
 ## What it does
 
-Most people send a concern to an office that cannot act on it, and never hear back. Civic fixes the
+Most people send a concern to an office that cannot act on it, and never hear back. CivLink fixes the
 routing first:
 
 1. **Pick the issue.** 13 topics, from potholes and school buses to data centers and online privacy.
-2. **See who handles it.** Civic names the office with the authority to act, explains why, lists
+2. **See who handles it.** CivLink names the office with the authority to act, explains why, lists
    what that office can do, and says plainly what it *cannot* do.
 3. **Write the message.** A labeled starting template, a length guide, and warnings for unfilled
    `[brackets]`, all-caps text, and links.
@@ -32,7 +36,7 @@ Richmond, or Congress.
 ### What it deliberately does not do
 
 - No account, no server, no analytics. Messages stay on the device.
-- Civic does not email or deliver anything. The resident stays in control of what they send.
+- CivLink does not email or deliver anything. The resident stays in control of what they send.
 - No official sign-in or micro-polls. Those would need a secure backend and verified accounts, which
   is out of scope for this submission.
 
@@ -52,9 +56,49 @@ The About screen and a small-phone layout are in `submission/screenshots/09-abou
 
 ---
 
+## Brand and theme
+
+The interface is built from the logo. Every color lives in `src/theme/index.js`; no screen hardcodes
+its own palette.
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| Teal | `#38CBD0` | primary buttons, highlights, active states |
+| Deep teal | `#127074` | links and any teal text (5.8:1 on white) |
+| Ink | `#0E1014` | headings, body text, bold outlines |
+| Slate | `#76848D` | icons and outlines only |
+| Slate text | `#5A666E` | secondary text (5.9:1 on white) |
+| White | `#FFFFFF` | page background |
+| Soft surface | `#F4F7F8` | cards and section backgrounds |
+| Border | `#DDE3E6` | card and divider borders |
+
+Accessibility decisions worth knowing:
+
+- Teal `#38CBD0` is a light color. White text on it is only 1.98:1, so every teal button and badge
+  uses **ink labels** (9.6:1). White text appears only on the deep teal (5.8:1).
+- The brand slate `#76848D` is 3.85:1 on white, so it is used for icons and outlines, never body
+  copy. Secondary text uses `#5A666E` (5.9:1).
+- Corners stay between 8 and 12px, buttons and the back control use a 2px ink outline to echo the
+  ballot-box mark, and one clean sans-serif stack is used everywhere: the platform's own system font
+  (SF on iOS, Roboto on Android, the system UI font on web) so text renders consistently and nothing
+  has to be downloaded.
+
+### Logo usage
+
+The files in `assets/branding/` are used exactly as supplied — never redrawn, recolored, cropped, or
+stretched, and always with clear space around the mark.
+
+- Welcome screen: full logo, centered, with the tagline. White background only.
+- Screen headers: the square icon on the left.
+- App icon, splash, adaptive icon, and favicon: the supplied icon files, copied to `assets/icon.png`,
+  `assets/adaptive-icon.png`, and `assets/favicon.png`.
+- The logo never sits on a dark or busy background; there is no dark mode.
+
+---
+
 ## Tech stack
 
-- **React Native 0.81** with **Expo SDK 54** — one codebase for iOS, Android, and web
+- **React Native 0.86** with **Expo SDK 57** — one codebase for iOS, Android, and web
 - **AsyncStorage** for on-device message storage
 - **expo-clipboard** for copying a saved message
 - Plain JavaScript, no state library and no navigation library. `src/navigation/Navigator.js` is a
@@ -84,18 +128,21 @@ npm run build:web
 ```
 ├── App.js                     # providers and status bar
 ├── index.js                   # Expo entry point
-├── app.json                   # app name, icon, splash
-├── assets/                    # original icon, adaptive icon, favicon
-├── scripts/generate-icons.mjs # draws those PNGs from code, no third-party artwork
+├── app.json                   # CivLink name, icons, splash
+├── assets/
+│   ├── branding/              # supplied logo and icon files (unmodified)
+│   ├── icon.png               # app icon (from branding)
+│   ├── adaptive-icon.png      # Android adaptive icon (from branding)
+│   └── favicon.png            # web favicon (from branding)
 ├── src/
-│   ├── components/            # Button, Field, Card, Notice, Screen shell, ...
+│   ├── components/            # Button, Field, Card, Notice, Logo, Screen shell, ...
 │   ├── context/AppContext.js  # draft message + saved messages
 │   ├── data/offices.js        # 26 offices and the four levels of government
 │   ├── data/topics.js         # 13 topics: routing, what they can do, limits, template
 │   ├── lib/                   # storage, validation, aggregation, formatting, links
 │   ├── navigation/Navigator.js
 │   ├── screens/               # Home, Topic, Route, Compose, Preview, Sent, Offices, Dashboard, About
-│   └── theme/index.js         # one palette, type scale, and spacing system
+│   └── theme/index.js         # palette, type scale, radii, spacing, logo aspect ratio
 ├── tests/                     # node:test files
 └── submission/                # screenshots and written submission pieces
 ```
@@ -151,8 +198,9 @@ how each screen works. The dated log of AI-assisted work is in [AI_USAGE.md](AI_
 
 ## Credits
 
-- Icons are system emoji. The app icon and splash mark are original, drawn by
-  `scripts/generate-icons.mjs`.
+- The CivLink logo, app icons, and favicons were supplied in `assets/branding/` and are used
+  unmodified. They were not drawn or edited by an AI assistant.
+- Icons elsewhere in the interface are system emoji.
 - Open source: [React](https://react.dev), [React Native](https://reactnative.dev),
   [Expo](https://expo.dev), [AsyncStorage](https://react-native-async-storage.github.io/async-storage/),
   [expo-clipboard](https://docs.expo.dev/versions/latest/sdk/clipboard/).

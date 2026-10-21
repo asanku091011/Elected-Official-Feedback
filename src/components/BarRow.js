@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, font, text } from '../theme';
 
-export default function BarRow({ label, count, total, color = colors.navy, icon }) {
+export default function BarRow({ label, count, total, color = colors.teal, icon }) {
   const share = total > 0 ? Math.round((count / total) * 100) : 0;
 
   return (
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   count: {
     ...text.small,
-    color: colors.inkSoft,
+    color: colors.slateText,
     fontVariant: ['tabular-nums'],
   },
   track: {

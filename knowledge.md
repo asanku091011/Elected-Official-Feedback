@@ -55,11 +55,11 @@ Use this to shape the app and the submission **without being pandering or partis
 | 10 | Official accounts, verified sign-in, server delivery, or micro-polls | not started | nice (out of scope for Oct 26) |
 | 11 | Geographic analytics beyond showing an optional ZIP code | not started | nice (out of scope for Oct 26) |
 
-**App one-liner:** Civic helps a Northern Virginia resident find the office of government that can actually act on their concern, then write and send a clear message to it.
+**App one-liner:** CivLink helps a Northern Virginia resident find the office of government that can actually act on their concern, then write and send a clear message to it.
 
 **Target user:** Residents of Virginia’s 10th District — students, parents, commuters, and neighbors in Loudoun and nearby counties — who have a local problem and do not know which office handles it.
 
-**Problem it solves:** People send concerns to the wrong office and never hear back. Civic explains who has the authority, what that office cannot do, and how to write a message staff will read — while storing nothing on a server.
+**Problem it solves:** People send concerns to the wrong office and never hear back. CivLink explains who has the authority, what that office cannot do, and how to write a message staff will read — while storing nothing on a server.
 
 ## 6. Instructions for the agent
 

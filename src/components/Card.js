@@ -21,13 +21,13 @@ export default function Card({ children, style, onPress, accessibilityLabel, acc
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.surface,
     borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border,
     padding: spacing.md,
   },
   pressed: {
-    backgroundColor: '#F1F4F9',
+    backgroundColor: colors.tealSoft,
   },
 });

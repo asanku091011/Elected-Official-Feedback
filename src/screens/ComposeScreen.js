@@ -35,7 +35,7 @@ export default function ComposeScreen() {
         <EmptyState
           icon="✏️"
           title="No issue selected"
-          body="Choose the topic you want to write about, then Civic can route your message to the right office."
+          body="Choose the topic you want to write about, then CivLink can route your message to the right office."
           actionLabel="Choose an issue"
           onAction={() => nav.replace('Topic')}
         />
@@ -167,8 +167,8 @@ export default function ComposeScreen() {
           <Switch
             value={draft.includeName}
             onValueChange={(value) => updateDraft({ includeName: value })}
-            trackColor={{ false: colors.border, true: colors.navyLight }}
-            thumbColor={draft.includeName ? colors.amber : colors.white}
+            trackColor={{ false: colors.border, true: colors.tealDeep }}
+            thumbColor={colors.white}
             accessibilityLabel="Include my name in this message"
           />
         </View>
@@ -215,14 +215,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   routeChipLabel: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
     letterSpacing: 0.8,
     textTransform: 'uppercase',
-    color: colors.inkSoft,
+    color: colors.slateText,
     fontWeight: font.weight.semibold,
     marginBottom: 2,
   },
   routeChipName: {
+    fontFamily: font.family,
     fontSize: font.size.sm + 1,
     fontWeight: font.weight.semibold,
     color: colors.ink,
@@ -238,20 +240,23 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   counter: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.inkSoft,
+    color: colors.slateText,
     fontVariant: ['tabular-nums'],
   },
   templateLink: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
-    color: colors.navy,
+    color: colors.tealDeep,
     textDecorationLine: 'underline',
   },
   clearLink: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
-    color: colors.inkSoft,
+    color: colors.slateText,
     textDecorationLine: 'underline',
   },
   guideCard: {
@@ -263,6 +268,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   guideTitle: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -273,7 +279,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm + 2,
   },
   guideBullet: {
-    color: colors.amber,
+    fontFamily: font.family,
+    color: colors.tealDeep,
     fontSize: font.size.md,
     width: 16,
     lineHeight: font.size.md * 1.4,
@@ -282,17 +289,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   guideLabel: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
     color: colors.ink,
     marginBottom: 1,
   },
   guideHint: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.inkSoft,
+    color: colors.slateText,
     lineHeight: font.size.sm * 1.45,
   },
   sectionTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -313,19 +323,22 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   switchLabel: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
     color: colors.ink,
     marginBottom: 2,
   },
   switchHint: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.inkSoft,
+    color: colors.slateText,
     lineHeight: font.size.sm * 1.45,
   },
   privacyNote: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.inkSoft,
+    color: colors.slateText,
     lineHeight: font.size.xs * 1.7,
     marginBottom: spacing.sm,
   },
@@ -334,8 +347,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   startOverText: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.inkSoft,
+    color: colors.slateText,
     textDecorationLine: 'underline',
   },
 });

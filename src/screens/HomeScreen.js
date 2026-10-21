@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Pressable, Animated } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNav } from '../navigation/Navigator';
 import Button from '../components/Button';
+import Logo, { LogoMark } from '../components/Logo';
 import { colors, spacing, radius, font, text } from '../theme';
 
 const STEPS = [
@@ -14,7 +15,7 @@ const STEPS = [
   {
     number: '2',
     title: 'See who actually handles it',
-    body: 'Civic explains which office has the power to act, and what that office cannot do.',
+    body: 'CivLink explains which office has the power to act, and what that office cannot do.',
   },
   {
     number: '3',
@@ -46,14 +47,14 @@ export default function HomeScreen() {
       >
         <View style={styles.inner}>
           <View style={styles.header}>
-            <View style={styles.wordmark}>
-              <Text style={styles.wordmarkText}>Civic</Text>
-              <View style={styles.wordmarkDot} />
+            <View style={styles.headerLeft}>
+              <LogoMark size={30} />
+              <Text style={styles.wordmark}>CivLink</Text>
             </View>
             <Pressable
               onPress={() => nav.push('About')}
               accessibilityRole="button"
-              accessibilityLabel="About Civic"
+              accessibilityLabel="About CivLink"
               hitSlop={12}
               style={({ pressed }) => [styles.aboutBtn, pressed && styles.pressed]}
             >
@@ -62,37 +63,40 @@ export default function HomeScreen() {
           </View>
 
           <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
-            <Text style={styles.eyebrow}>Northern Virginia · civic help</Text>
-            <Text style={styles.headline} accessibilityRole="header">
-              Your message, in the right inbox.
-            </Text>
-            <Text style={styles.heroBody}>
-              Most people send a concern to an office that cannot act on it. Civic finds the office
-              that can, explains why, and helps you write something a staffer will actually read.
-            </Text>
+            <View style={styles.hero}>
+              <Logo width={200} style={styles.heroLogo} />
+              <Text style={styles.eyebrow}>Northern Virginia · civic help</Text>
+              <Text style={styles.headline} accessibilityRole="header">
+                Your message, in the right inbox.
+              </Text>
+              <Text style={styles.heroBody}>
+                Most people send a concern to an office that cannot act on it. CivLink finds the
+                office that can, explains why, and helps you write something a staffer will actually
+                read.
+              </Text>
 
-            <View style={styles.ctaBlock}>
-              <Button
-                label="Find where my issue goes"
-                variant="amber"
-                onPress={() => nav.push('Topic')}
-                accessibilityHint="Opens the list of issue topics"
-              />
-              <Button
-                label="Browse offices of government"
-                variant="secondary"
-                onPress={() => nav.push('Offices')}
-                style={styles.secondaryCta}
-              />
-            </View>
+              <View style={styles.ctaBlock}>
+                <Button
+                  label="Find where my issue goes"
+                  onPress={() => nav.push('Topic')}
+                  accessibilityHint="Opens the list of issue topics"
+                />
+                <Button
+                  label="Browse offices of government"
+                  variant="secondary"
+                  onPress={() => nav.push('Offices')}
+                  style={styles.secondaryCta}
+                />
+              </View>
 
-            <View style={styles.trustRow}>
-              {TRUST.map((item) => (
-                <View key={item} style={styles.trustItem}>
-                  <Text style={styles.trustCheck}>✓</Text>
-                  <Text style={styles.trustText}>{item}</Text>
-                </View>
-              ))}
+              <View style={styles.trustRow}>
+                {TRUST.map((item) => (
+                  <View key={item} style={styles.trustItem}>
+                    <Text style={styles.trustCheck}>✓</Text>
+                    <Text style={styles.trustText}>{item}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
           </Animated.View>
         </View>
@@ -101,17 +105,19 @@ export default function HomeScreen() {
 
         <View style={[styles.inner, styles.section]}>
           <Text style={styles.sectionTitle}>How it works</Text>
-          {STEPS.map((step) => (
-            <View key={step.number} style={styles.step}>
-              <View style={styles.stepNum}>
-                <Text style={styles.stepNumText}>{step.number}</Text>
+          <View style={styles.stepsCard}>
+            {STEPS.map((step) => (
+              <View key={step.number} style={styles.step}>
+                <View style={styles.stepNum}>
+                  <Text style={styles.stepNumText}>{step.number}</Text>
+                </View>
+                <View style={styles.stepBody}>
+                  <Text style={styles.stepTitle}>{step.title}</Text>
+                  <Text style={styles.stepText}>{step.body}</Text>
+                </View>
               </View>
-              <View style={styles.stepBody}>
-                <Text style={styles.stepTitle}>{step.title}</Text>
-                <Text style={styles.stepText}>{step.body}</Text>
-              </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
 
         <View style={styles.inner}>
@@ -141,7 +147,7 @@ export default function HomeScreen() {
           <Pressable
             onPress={() => nav.push('About')}
             accessibilityRole="button"
-            accessibilityLabel="About Civic, privacy, and sources"
+            accessibilityLabel="About CivLink, privacy, and sources"
             style={({ pressed }) => [styles.footerLink, pressed && styles.pressed]}
           >
             <Text style={styles.footerText}>
@@ -158,7 +164,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.white,
   },
   scroll: {
     flex: 1,
@@ -179,105 +185,126 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
     paddingBottom: spacing.sm,
   },
-  wordmark: {
+  headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  wordmarkText: {
-    fontSize: font.size.lg + 2,
+  wordmark: {
+    fontFamily: font.family,
+    fontSize: font.size.lg,
     fontWeight: font.weight.bold,
-    color: colors.white,
-    letterSpacing: -0.5,
-  },
-  wordmarkDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: colors.amber,
-    marginLeft: 3,
-    marginBottom: 9,
+    color: colors.ink,
+    letterSpacing: -0.4,
+    marginLeft: spacing.sm,
   },
   aboutBtn: {
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.md,
     borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.borderDark,
+    borderWidth: 2,
+    borderColor: colors.ink,
   },
   aboutText: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.steelLight,
-    fontWeight: font.weight.medium,
+    color: colors.ink,
+    fontWeight: font.weight.semibold,
   },
   pressed: {
-    opacity: 0.7,
+    backgroundColor: colors.tealSoft,
+  },
+  hero: {
+    alignItems: 'center',
+    paddingTop: spacing.lg,
+  },
+  // Clear space around the logo stays about 10% of its width.
+  heroLogo: {
+    marginBottom: spacing.lg,
   },
   eyebrow: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
     fontWeight: font.weight.semibold,
     letterSpacing: 1.4,
     textTransform: 'uppercase',
-    color: colors.amber,
-    marginTop: spacing.lg,
+    color: colors.tealDeep,
     marginBottom: spacing.sm,
+    textAlign: 'center',
   },
   headline: {
+    fontFamily: font.family,
     fontSize: font.size.xxl,
     fontWeight: font.weight.bold,
-    color: colors.white,
+    color: colors.ink,
     letterSpacing: -0.9,
     lineHeight: font.size.xxl * 1.1,
     marginBottom: spacing.md,
+    textAlign: 'center',
+    maxWidth: 520,
   },
   heroBody: {
+    fontFamily: font.family,
     fontSize: font.size.md,
-    color: colors.steelLight,
+    color: colors.slateText,
     lineHeight: font.size.md * 1.6,
+    textAlign: 'center',
+    maxWidth: 540,
   },
   ctaBlock: {
+    alignSelf: 'stretch',
     marginTop: spacing.lg,
+    maxWidth: 420,
+    width: '100%',
   },
   secondaryCta: {
     marginTop: spacing.sm,
-    backgroundColor: colors.navyLight,
-    borderColor: colors.borderDark,
   },
   trustRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'center',
     marginTop: spacing.md,
     marginBottom: spacing.lg,
   },
   trustItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: spacing.md,
+    marginHorizontal: spacing.sm,
     marginBottom: spacing.xs,
   },
   trustCheck: {
-    color: colors.amber,
+    color: colors.tealDeep,
     fontSize: font.size.sm,
     fontWeight: font.weight.bold,
     marginRight: 4,
   },
   trustText: {
-    color: colors.steelLight,
+    fontFamily: font.family,
+    color: colors.slateText,
     fontSize: font.size.sm,
   },
   divider: {
     height: 1,
-    backgroundColor: colors.navyLight,
+    backgroundColor: colors.border,
     marginVertical: spacing.lg,
   },
   section: {
     marginBottom: spacing.lg,
   },
   sectionTitle: {
+    fontFamily: font.family,
     fontSize: font.size.lg,
     fontWeight: font.weight.bold,
-    color: colors.white,
+    color: colors.ink,
     marginBottom: spacing.md,
     letterSpacing: -0.2,
+  },
+  stepsCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
   },
   step: {
     flexDirection: 'row',
@@ -287,67 +314,76 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: colors.amber,
+    backgroundColor: colors.teal,
+    borderWidth: 2,
+    borderColor: colors.ink,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.md,
   },
   stepNumText: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.bold,
-    color: colors.black,
+    color: colors.ink,
   },
   stepBody: {
     flex: 1,
     paddingTop: 3,
   },
   stepTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
-    color: colors.white,
+    color: colors.ink,
     marginBottom: 2,
   },
   stepText: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.steel,
+    color: colors.slateText,
     lineHeight: font.size.sm * 1.55,
   },
   privacyCard: {
-    backgroundColor: colors.navyLight,
+    backgroundColor: colors.tealSoft,
     borderRadius: radius.lg,
     padding: spacing.lg,
     marginBottom: spacing.md,
     borderWidth: 1,
-    borderColor: colors.borderDark,
+    borderColor: colors.tealBorder,
   },
   privacyTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
-    color: colors.white,
+    color: colors.ink,
     marginBottom: spacing.xs + 2,
   },
   privacyBody: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.steelLight,
+    color: colors.slateText,
     lineHeight: font.size.sm * 1.6,
   },
   officialBlock: {
-    backgroundColor: 'transparent',
+    backgroundColor: colors.white,
     borderRadius: radius.lg,
     padding: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.borderDark,
+    borderWidth: 2,
+    borderColor: colors.ink,
     marginBottom: spacing.lg,
   },
   officialBlockTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
-    color: colors.white,
+    color: colors.ink,
     marginBottom: spacing.xs + 2,
   },
   officialBlockBody: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.steel,
+    color: colors.slateText,
     lineHeight: font.size.sm * 1.6,
     marginBottom: spacing.sm,
   },
@@ -363,13 +399,14 @@ const styles = StyleSheet.create({
   footerText: {
     ...text.small,
     fontSize: font.size.xs,
-    color: colors.steel,
+    color: colors.slateText,
     textAlign: 'center',
     lineHeight: font.size.xs * 1.7,
   },
   footerLinkText: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.steelLight,
+    color: colors.tealDeep,
     fontWeight: font.weight.semibold,
     marginTop: spacing.xs,
     textDecorationLine: 'underline',

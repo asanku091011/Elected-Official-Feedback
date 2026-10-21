@@ -4,6 +4,8 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// The key keeps its original spelling on purpose: renaming it would hide saved
+// messages from anyone who already used an earlier build of the app.
 const KEY = 'civic.messages.v1';
 
 function looksLikeMessage(value) {

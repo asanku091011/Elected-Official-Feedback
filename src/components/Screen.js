@@ -1,10 +1,11 @@
-// Every screen shares this shell: a navy header, a light rounded content
-// "sheet", and an optional sticky footer for the main action.
+// Every screen shares this shell: a white header with the CivLink mark on the
+// left, a readable title, and an optional sticky footer for the main action.
 
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, spacing, radius, font, text } from '../theme';
+import { LogoMark } from './Logo';
+import { colors, spacing, radius, font } from '../theme';
 
 export default function Screen({
   title,
@@ -23,19 +24,20 @@ export default function Screen({
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
         <View style={styles.headerRow}>
-          {onBack ? (
-            <Pressable
-              onPress={onBack}
-              hitSlop={16}
-              style={styles.back}
-              accessibilityRole="button"
-              accessibilityLabel="Go back"
-            >
-              <Text style={styles.backText}>←</Text>
-            </Pressable>
-          ) : (
-            <View style={styles.back} />
-          )}
+          <View style={styles.headerLeft}>
+            {onBack ? (
+              <Pressable
+                onPress={onBack}
+                hitSlop={12}
+                style={({ pressed }) => [styles.back, pressed && styles.pressed]}
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+              >
+                <Text style={styles.backText}>←</Text>
+              </Pressable>
+            ) : null}
+            <LogoMark size={30} />
+          </View>
           {step ? <Text style={styles.step}>{step}</Text> : null}
           {headerRight ? <View style={styles.headerRight}>{headerRight}</View> : null}
         </View>
@@ -47,7 +49,7 @@ export default function Screen({
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
 
-      <View style={styles.sheet}>
+      <View style={styles.body}>
         {scroll ? (
           <ScrollView
             style={styles.scroll}
@@ -74,63 +76,77 @@ export default function Screen({
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.white,
   },
   header: {
+    backgroundColor: colors.white,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,
-    paddingBottom: spacing.lg,
+    paddingBottom: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 36,
+    minHeight: 40,
     marginBottom: spacing.sm,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   back: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: radius.sm,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.navyLight,
+    borderWidth: 2,
+    borderColor: colors.ink,
+    backgroundColor: colors.white,
+    marginRight: spacing.sm,
   },
   backText: {
-    color: colors.white,
-    fontSize: 20,
-    lineHeight: 22,
+    color: colors.ink,
+    fontSize: 18,
+    lineHeight: 20,
     marginTop: -2,
+  },
+  pressed: {
+    backgroundColor: colors.tealSoft,
   },
   headerRight: {
     alignItems: 'flex-end',
   },
   step: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
     fontWeight: font.weight.semibold,
     letterSpacing: 1.2,
-    color: colors.amber,
+    color: colors.tealDeep,
     textTransform: 'uppercase',
   },
   title: {
+    fontFamily: font.family,
     fontSize: font.size.xxl,
     fontWeight: font.weight.bold,
-    color: colors.white,
+    color: colors.ink,
     letterSpacing: -0.7,
     lineHeight: font.size.xxl * 1.12,
   },
   subtitle: {
-    ...text.body,
-    color: colors.steelLight,
-    marginTop: spacing.sm,
+    fontFamily: font.family,
     fontSize: font.size.md,
+    color: colors.slateText,
+    lineHeight: font.size.md * 1.5,
+    marginTop: spacing.sm,
+    maxWidth: 620,
   },
-  sheet: {
+  body: {
     flex: 1,
-    backgroundColor: colors.slate,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    overflow: 'hidden',
+    backgroundColor: colors.white,
   },
   scroll: {
     flex: 1,
@@ -156,6 +172,5 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     backgroundColor: colors.white,
     paddingTop: spacing.md,
-    paddingHorizontal: 0,
   },
 });

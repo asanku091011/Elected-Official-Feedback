@@ -74,7 +74,7 @@ export default function OfficesScreen() {
       ))}
 
       <Text style={styles.footnote}>
-        Only official public websites are linked. Civic does not list individual officeholders,
+        Only official public websites are linked. CivLink does not list individual officeholders,
         because elected officials and contact details change often.
       </Text>
     </Screen>
@@ -90,27 +90,30 @@ const styles = StyleSheet.create({
   chip: {
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
-    borderRadius: 100,
+    borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.white,
     marginRight: spacing.sm,
     marginBottom: spacing.sm,
   },
+  // The active filter is teal with an ink outline and ink label, so it reads
+  // clearly and still meets contrast.
   chipSelected: {
-    backgroundColor: colors.navy,
-    borderColor: colors.navy,
+    backgroundColor: colors.teal,
+    borderColor: colors.ink,
   },
   chipPressed: {
     opacity: 0.75,
   },
   chipText: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
     color: colors.ink,
   },
   chipTextSelected: {
-    color: colors.white,
+    color: colors.ink,
   },
   group: {
     marginBottom: spacing.lg,
@@ -121,16 +124,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   groupTitle: {
+    fontFamily: font.family,
     fontSize: font.size.lg,
     fontWeight: font.weight.bold,
     color: colors.ink,
     letterSpacing: -0.2,
   },
   groupShort: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
-    color: colors.inkSoft,
+    color: colors.slateText,
     fontWeight: font.weight.semibold,
   },
   groupBlurb: {
@@ -139,7 +144,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm + 2,
   },
   officeCard: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.md,
@@ -154,6 +159,7 @@ const styles = StyleSheet.create({
   },
   officeName: {
     flex: 1,
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
     color: colors.ink,
@@ -169,8 +175,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   footnote: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.inkSoft,
+    color: colors.slateText,
     lineHeight: font.size.xs * 1.7,
     marginTop: spacing.sm,
   },

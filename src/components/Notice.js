@@ -3,10 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, radius, font, text } from '../theme';
 
 const TONES = {
-  info: { bg: '#EDF2FA', border: '#C9D6EA', icon: 'ℹ️', title: colors.navy },
-  warning: { bg: colors.warningLight, border: '#F0D9A8', icon: '⚠️', title: colors.warning },
-  success: { bg: colors.successLight, border: '#B7DCC9', icon: '✅', title: colors.success },
-  danger: { bg: colors.dangerLight, border: '#EFC4C0', icon: '⚠️', title: colors.danger },
+  info: { bg: colors.tealSoft, border: colors.tealBorder, icon: 'ℹ️', title: colors.tealDeep },
+  warning: { bg: colors.warningSoft, border: colors.warningBorder, icon: '⚠️', title: colors.warning },
+  success: { bg: colors.successSoft, border: colors.successBorder, icon: '✅', title: colors.success },
+  danger: { bg: colors.dangerSoft, border: colors.dangerBorder, icon: '⚠️', title: colors.danger },
 };
 
 export default function Notice({ tone = 'info', title, children, style }) {
@@ -45,6 +45,6 @@ const styles = StyleSheet.create({
   },
   body: {
     ...text.small,
-    color: colors.inkSoft,
+    color: colors.ink,
   },
 });

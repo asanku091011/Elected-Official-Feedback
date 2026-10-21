@@ -51,14 +51,14 @@ export default function AboutScreen() {
 
   return (
     <Screen
-      title="About Civic"
+      title="About CivLink"
       subtitle="What it does, what it stores, and where the information comes from."
       onBack={nav.pop}
       footer={<Button label="Back to home" variant="secondary" onPress={() => nav.reset('Home')} />}
     >
       <Text style={styles.sectionTitle}>What this app is for</Text>
       <Text style={styles.body}>
-        Civic helps a resident of Northern Virginia figure out which office of government actually
+        CivLink helps a resident of Northern Virginia figure out which office of government actually
         handles their problem, then write a clear message and send it through that office’s own
         contact page. It covers local, state, federal, and regional government.
       </Text>
@@ -139,13 +139,13 @@ export default function AboutScreen() {
 
       <Text style={styles.sectionTitle}>Credits</Text>
       <Text style={styles.body}>
-        Icons are emoji rendered by the system font. Open source libraries: React, React Native,
-        Expo, AsyncStorage, and expo-clipboard. No third-party images or copyrighted assets are
-        included.
+        The CivLink logo and app icons are used exactly as supplied in assets/branding. Open source
+        libraries: React, React Native, Expo, AsyncStorage, and expo-clipboard. No third-party images
+        or copyrighted assets are included.
       </Text>
 
       <View style={styles.footerBlock}>
-        <Text style={styles.footerTitle}>Civic · version 1.0</Text>
+        <Text style={styles.footerTitle}>CivLink · version 1.0</Text>
         <Text style={styles.footerText}>
           A student project for the 2026 Congressional App Challenge in Virginia’s 10th District.
           This app is nonpartisan and does not endorse any candidate or party.
@@ -157,6 +157,7 @@ export default function AboutScreen() {
 
 const styles = StyleSheet.create({
   sectionTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   sourceName: {
+    fontFamily: font.family,
     fontSize: font.size.sm + 1,
     fontWeight: font.weight.semibold,
     color: colors.ink,
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   privacyCard: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.md,
@@ -199,6 +201,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   privacyStrong: {
+    fontFamily: font.family,
     fontWeight: font.weight.bold,
     color: colors.ink,
   },
@@ -210,14 +213,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerTitle: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
     color: colors.ink,
     marginBottom: spacing.xs,
   },
   footerText: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.inkSoft,
+    color: colors.slateText,
     textAlign: 'center',
     lineHeight: font.size.xs * 1.7,
   },

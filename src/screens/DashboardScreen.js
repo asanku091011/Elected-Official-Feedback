@@ -48,7 +48,7 @@ export default function DashboardScreen() {
 
       {!ready ? (
         <View style={styles.loading}>
-          <ActivityIndicator color={colors.navy} />
+          <ActivityIndicator color={colors.tealDeep} />
           <Text style={styles.loadingText}>Loading saved messages…</Text>
         </View>
       ) : summary.total === 0 ? (
@@ -104,7 +104,7 @@ export default function DashboardScreen() {
                 icon={topic.icon}
                 count={topic.count}
                 total={summary.total}
-                color={colors.navy}
+                color={colors.teal}
               />
             ))}
           </Card>
@@ -181,18 +181,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statValue: {
+    fontFamily: font.family,
     fontSize: font.size.xl,
     fontWeight: font.weight.bold,
     color: colors.ink,
   },
   statLabel: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.inkSoft,
+    color: colors.slateText,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
     marginTop: 2,
   },
   sectionTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   messageCard: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.md,
@@ -217,6 +220,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   messageTopic: {
+    fontFamily: font.family,
     flex: 1,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
@@ -224,8 +228,9 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   messageMeta: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.inkSoft,
+    color: colors.slateText,
     marginBottom: spacing.sm - 2,
   },
   messageText: {
@@ -236,14 +241,16 @@ const styles = StyleSheet.create({
     paddingTop: spacing.sm,
   },
   readMoreText: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
-    color: colors.navy,
+    color: colors.tealDeep,
     textDecorationLine: 'underline',
   },
   footnote: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
-    color: colors.inkSoft,
+    color: colors.slateText,
     lineHeight: font.size.xs * 1.7,
     marginTop: spacing.sm,
   },

@@ -99,14 +99,14 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   rowPressed: {
-    backgroundColor: '#EEF2F8',
-    borderColor: colors.steelLight,
+    backgroundColor: colors.tealSoft,
+    borderColor: colors.tealBorder,
   },
   iconBox: {
     width: 42,
     height: 42,
     borderRadius: radius.md,
-    backgroundColor: colors.slate,
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.md - 2,
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rowTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
     color: colors.ink,
@@ -126,11 +127,11 @@ const styles = StyleSheet.create({
   rowExamples: {
     ...text.small,
     fontSize: font.size.sm,
-    color: colors.inkSoft,
+    color: colors.slateText,
   },
   chevron: {
     fontSize: 24,
-    color: colors.steelLight,
+    color: colors.slate,
     marginLeft: spacing.sm,
     marginTop: -4,
   },

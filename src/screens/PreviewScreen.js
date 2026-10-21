@@ -11,7 +11,7 @@ import EmptyState from '../components/EmptyState';
 import { getTopic } from '../data/topics';
 import { getOffice } from '../data/offices';
 import { reviewDraft } from '../lib/validate';
-import { colors, spacing, font, text } from '../theme';
+import { colors, spacing, radius, font, text } from '../theme';
 
 export default function PreviewScreen() {
   const nav = useNav();
@@ -97,7 +97,7 @@ export default function PreviewScreen() {
       </View>
 
       <Notice tone="info" title="How this gets sent">
-        Saving keeps a copy on this device and shows you the office’s official contact page. Civic
+        Saving keeps a copy on this device and shows you the office’s official contact page. CivLink
         does not email or deliver the message for you, so you stay in control of what you send.
       </Notice>
     </Screen>
@@ -117,28 +117,32 @@ const styles = StyleSheet.create({
   },
   metaTopic: {
     flex: 1,
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
     color: colors.ink,
     marginRight: spacing.sm,
   },
   metaOffice: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.ink,
     marginBottom: 4,
   },
   metaSmall: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.inkSoft,
+    color: colors.slateText,
   },
+  // The teal bar on the left marks the message as the thing being sent.
   messageCard: {
     backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: radius.md,
     borderLeftWidth: 4,
-    borderLeftColor: colors.amber,
+    borderLeftColor: colors.teal,
     padding: spacing.md,
     marginBottom: spacing.lg,
   },

@@ -24,7 +24,7 @@ export default function RouteScreen({ topicId }) {
         <EmptyState
           icon="🗂️"
           title="That issue is not available"
-          body="Choose a topic and Civic will show the office that handles it."
+          body="Choose a topic and CivLink will show the office that handles it."
           actionLabel="Choose an issue"
           onAction={() => nav.replace('Topic')}
         />
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   officeName: {
+    fontFamily: font.family,
     fontSize: font.size.lg,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   sectionTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -153,7 +155,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   check: {
-    color: colors.success,
+    fontFamily: font.family,
+    color: colors.tealDeep,
     fontWeight: font.weight.bold,
     fontSize: font.size.md,
     width: 22,
@@ -164,14 +167,15 @@ const styles = StyleSheet.create({
     fontSize: font.size.md,
   },
   limitCard: {
-    backgroundColor: colors.warningLight,
+    backgroundColor: colors.warningSoft,
     borderWidth: 1,
-    borderColor: '#F0D9A8',
+    borderColor: colors.warningBorder,
     borderRadius: radius.md,
     padding: spacing.md,
     marginBottom: spacing.lg,
   },
   limitTitle: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.bold,
     color: colors.warning,
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
   },
   limitText: {
     ...text.small,
-    color: colors.inkSoft,
+    color: colors.slateText,
   },
   alsoRow: {
     backgroundColor: colors.white,
@@ -197,6 +201,7 @@ const styles = StyleSheet.create({
   },
   alsoName: {
     flex: 1,
+    fontFamily: font.family,
     fontSize: font.size.sm + 1,
     fontWeight: font.weight.semibold,
     color: colors.ink,

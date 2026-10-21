@@ -113,8 +113,8 @@ export default function SentScreen({ record, saved }) {
 
       <Text style={styles.sectionTitle}>Send it to the office</Text>
       <Text style={styles.body}>
-        Civic does not send your message for you. Taking this last step is what puts your concern in
-        an official record.
+        CivLink does not send your message for you. Taking this last step is what puts your concern
+        in an official record.
       </Text>
 
       {office ? (
@@ -173,7 +173,7 @@ export default function SentScreen({ record, saved }) {
 const styles = StyleSheet.create({
   successCard: {
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.lg,
@@ -185,30 +185,36 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: colors.successLight,
+    backgroundColor: colors.successSoft,
+    borderWidth: 2,
+    borderColor: colors.success,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.sm,
   },
   checkMark: {
+    fontFamily: font.family,
     fontSize: 26,
     color: colors.success,
     fontWeight: font.weight.bold,
   },
   successTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.ink,
     marginBottom: spacing.md,
   },
   refLabel: {
+    fontFamily: font.family,
     fontSize: font.size.xs,
     letterSpacing: 1,
     textTransform: 'uppercase',
-    color: colors.inkSoft,
+    color: colors.slateText,
     marginBottom: 4,
   },
   refValue: {
+    fontFamily: font.family,
     fontSize: font.size.xl,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -221,7 +227,7 @@ const styles = StyleSheet.create({
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.md,
@@ -233,16 +239,19 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   metaTopic: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     fontWeight: font.weight.semibold,
     color: colors.ink,
     marginBottom: 2,
   },
   metaOffice: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
-    color: colors.inkSoft,
+    color: colors.slateText,
   },
   sectionTitle: {
+    fontFamily: font.family,
     fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.ink,
@@ -269,7 +278,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderLeftWidth: 4,
-    borderLeftColor: colors.amber,
+    borderLeftColor: colors.teal,
     borderRadius: radius.md,
     padding: spacing.md,
     marginBottom: spacing.lg,
@@ -283,10 +292,11 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm + 2,
   },
   stepNum: {
+    fontFamily: font.family,
     width: 22,
     fontSize: font.size.sm,
     fontWeight: font.weight.bold,
-    color: colors.amber,
+    color: colors.tealDeep,
   },
   stepText: {
     ...text.body,
@@ -302,6 +312,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   deleteText: {
+    fontFamily: font.family,
     fontSize: font.size.sm,
     color: colors.danger,
     textDecorationLine: 'underline',

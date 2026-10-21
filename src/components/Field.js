@@ -19,16 +19,12 @@ export default function Field({
 }) {
   return (
     <View style={[styles.wrap, style]}>
-      {label ? (
-        <Text style={styles.label}>
-          {label}
-        </Text>
-      ) : null}
+      {label ? <Text style={styles.label}>{label}</Text> : null}
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#8794AC"
+        placeholderTextColor={colors.slateText}
         multiline={multiline}
         maxLength={maxLength}
         keyboardType={keyboardType}
@@ -57,8 +53,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm - 2,
   },
   input: {
+    fontFamily: font.family,
     backgroundColor: colors.white,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.border,
     borderRadius: radius.md,
     paddingHorizontal: spacing.md,

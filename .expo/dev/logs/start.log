@@ -21,3 +21,47 @@
 {"_e":"metro:instantiate","_t":1788230460349,"atlas":false,"workers":12,"host":"::","port":8082}
 {"_e":"metro:client_log","_t":1788230488741,"level":"error","data":["Project is incompatible with this version of Expo Go\n\nThe project you requested requires a newer version of Expo Go.\n\nHow to fix this error:\n\nDownload the latest version of Expo Go from the App Store."]}
 {"_e":"metro:client_log","_t":1788230490929,"level":"error","data":["Project is incompatible with this version of Expo Go\n\nThe project you requested requires a newer version of Expo Go.\n\nHow to fix this error:\n\nDownload the latest version of Expo Go from the App Store."]}
+{"_e":"root:init","_t":1792546555619,"format":"v0-jsonl","version":"57.0.31"}
+{"_e":"env:mode","_t":1792546555623,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1792546555629,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1792546556340,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1792546557295,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1792546558037,"plugins":[]}
+{"_e":"metro:instantiate","_t":1792546566083,"atlas":false,"workers":12,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1792546577127,"id":"2","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1792546577128,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792546577136,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1792546577241,"id":"2","progress":0.057183364839319475,"total":46,"current":11}
+{"_e":"metro:bundling:progress","_t":1792546577340,"id":"2","progress":0.10053539559785842,"total":205,"current":65}
+{"_e":"metro:bundling:progress","_t":1792546577440,"id":"2","progress":0.29969630774148864,"total":274,"current":150}
+{"_e":"metro:bundling:progress","_t":1792546577540,"id":"2","progress":0.3702122594723269,"total":355,"current":216}
+{"_e":"metro:bundling:progress","_t":1792546577640,"id":"2","progress":0.45879697751991166,"total":437,"current":296}
+{"_e":"metro:bundling:progress","_t":1792546577740,"id":"2","progress":0.6224175288900833,"total":488,"current":385}
+{"_e":"metro:bundling:progress","_t":1792546577840,"id":"2","progress":0.7644301113798561,"total":549,"current":480}
+{"_e":"metro:bundling:progress","_t":1792546577972,"id":"2","progress":0.7644301113798561,"total":611,"current":525}
+{"_e":"metro:bundling:progress","_t":1792546578072,"id":"2","progress":0.843963202206416,"total":664,"current":610}
+{"_e":"metro:bundling:progress","_t":1792546578172,"id":"2","progress":0.9318386848875673,"total":692,"current":668}
+{"_e":"metro:bundling:progress","_t":1792546578283,"id":"2","progress":0.9971651325386047,"total":705,"current":704}
+{"_e":"metro:bundling:progress","_t":1792546578815,"id":"2","progress":0.999,"total":705,"current":705}
+{"_e":"metro:bundling:progress","_t":1792546578916,"id":"2","progress":0.999,"total":730,"current":720}
+{"_e":"metro:bundling:progress","_t":1792546579007,"id":"2","progress":0.999,"total":730,"current":721}
+{"_e":"metro:bundling:progress","_t":1792546579115,"id":"2","progress":0.999,"total":735,"current":722}
+{"_e":"metro:bundling:progress","_t":1792546579141,"id":"2","progress":0.999,"total":735,"current":723}
+{"_e":"metro:bundling:progress","_t":1792546579249,"id":"2","progress":0.999,"total":738,"current":725}
+{"_e":"metro:bundling:progress","_t":1792546579369,"id":"2","progress":0.999,"total":738,"current":727}
+{"_e":"metro:bundling:progress","_t":1792546581466,"id":"2","progress":0.999,"total":738,"current":728}
+{"_e":"metro:bundling:progress","_t":1792546581577,"id":"2","progress":0.999,"total":750,"current":740}
+{"_e":"metro:bundling:progress","_t":1792546581682,"id":"2","progress":0.999,"total":751,"current":747}
+{"_e":"metro:bundling:progress","_t":1792546581794,"id":"2","progress":0.999,"total":758,"current":756}
+{"_e":"metro:bundling:progress","_t":1792546581904,"id":"2","progress":0.999,"total":758,"current":757}
+{"_e":"metro:bundling:progress","_t":1792546581958,"id":"2","progress":0.999,"total":758,"current":758}
+{"_e":"metro:bundling:done","_t":1792546582073,"id":"2","total":758,"ms":4946.0584}
+{"_e":"metro:client_log","_t":1792546582830,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/HomeScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582831,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/TopicScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582832,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/RouteScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582832,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/ComposeScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582832,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/PreviewScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582832,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/SentScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582832,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/OfficesScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582832,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/DashboardScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1792546582832,"level":"warn","data":["Require cycle: src/navigation/Navigator.js -> src/screens/AboutScreen.js -> src/navigation/Navigator.js\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}

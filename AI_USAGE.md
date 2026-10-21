@@ -1,12 +1,49 @@
 # AI Usage Log
 
-This file records where AI help was used while building Civic, for honest disclosure in the
+This file records where AI help was used while building CivLink, for honest disclosure in the
 Congressional App Challenge submission. Add an entry after any work session that used an AI
 assistant. Keep it factual — the judges compare this against the source code and the demo video.
 
 **How to use it:** newest entry at the top. For each entry, say what the assistant produced, and
 what the student reviewed, changed, or wrote without help. Never delete an entry to make the history
 look smaller.
+
+---
+
+## 2026-10-20 — CivLink rebrand: logo integration and full re-theme
+
+**AI assistant did:**
+- Read the supplied logo and icon files in `assets/branding/` and left every one of them byte-for-byte
+  unchanged. It copied the 1024px icon to `assets/icon.png` and the 64px favicon to
+  `assets/favicon.png`, made the Android adaptive icon from the same white-background artwork, and
+  pointed `app.json` at them (icon, adaptive icon, splash, web favicon). Expo derives the iOS icon
+  and the generated `favicon.ico` from those same files.
+- Rebuilt `src/theme/index.js` from the logo palette: teal `#38CBD0`, deep teal `#127074`, ink
+  `#0E1014`, slate `#76848D`, slate text `#5A666E`, white, surface `#F4F7F8`, borders `#DDE3E6`.
+  Removed the old navy/amber palette and added an 8–12px radius scale, an ink-outline border, and a
+  single system sans-serif family.
+- Rewrote the nine screens and the shared components to use only those tokens, with no leftover
+  hardcoded colors. Added `src/components/Logo.js` and put the full logo plus tagline on the welcome
+  screen and the square icon in the header of every screen.
+- Renamed the app from Civic to CivLink in `app.json`, `App.js`, screen copy, and the docs.
+- Measured every text/background pair it introduced instead of assuming contrast, and chose ink labels
+  on teal buttons because white on `#38CBD0` is only 1.98:1. Deep teal carries any white text (5.8:1)
+  and secondary text uses `#5A666E` (5.9:1), since the brand slate is only 3.85:1.
+- Drove all nine screens in a headless browser at 320px, 390px, and 1280px wide, auditing computed
+  foreground/background contrast on every text node (no failures), checking for horizontal overflow
+  (none), confirming both logo images load on every screen, and regenerating the screenshots in
+  `submission/screenshots/`.
+- Re-ran the 21 unit tests and the web export afterwards.
+
+**Student reviewed / did themselves:**
+- Supplied the logo and icon artwork and chose the directions: logo on light backgrounds only, ink
+  text on teal, one accent color.
+- _Student: look over the new screens on your own phone and note anything you re-did or disagreed with._
+
+**Files changed in this session:** `app.json`, `App.js`, `src/theme/index.js`,
+`src/components/Logo.js` (new), `src/components/{Button,Card,Field,Notice,BarRow,Screen}.js`,
+`src/screens/*.js` (all nine), `assets/icon.png`, `assets/adaptive-icon.png`, `assets/favicon.png`,
+`README.md`, `knowledge.md`, `AI_USAGE.md`.
 
 ---
 
