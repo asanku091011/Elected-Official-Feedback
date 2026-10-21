@@ -1,173 +1,157 @@
-import React, { useRef, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Animated,
-  SafeAreaView,
-  StatusBar,
-  Dimensions,
-} from 'react-native';
-import { colors, spacing, radius, font } from '../theme';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Pressable, Animated } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNav } from '../navigation/Navigator';
+import Button from '../components/Button';
+import { colors, spacing, radius, font, text } from '../theme';
 
-const { width } = Dimensions.get('window');
-
-const FEATURES = [
-  { icon: '🔒', label: 'Anonymous by default' },
-  { icon: '📍', label: 'Finds your officials automatically' },
-  { icon: '📊', label: 'Tracks issue trends' },
-  { icon: '🗳️', label: 'Official micro-polls' },
-  { icon: '🛡️', label: 'Moderated & safe' },
-  { icon: '🔀', label: 'Routes to the right office' },
+const STEPS = [
+  {
+    number: '1',
+    title: 'Pick your issue',
+    body: 'Choose the topic that matches your concern — roads, schools, water, privacy, and more.',
+  },
+  {
+    number: '2',
+    title: 'See who actually handles it',
+    body: 'Civic explains which office has the power to act, and what that office cannot do.',
+  },
+  {
+    number: '3',
+    title: 'Write it, then send it',
+    body: 'Get help writing a clear message, then use the office’s own contact page to send it.',
+  },
 ];
 
-export default function HomeScreen({ navigation }) {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(24)).current;
+const TRUST = ['No account', 'No tracking', 'Saved on your device'];
+
+export default function HomeScreen() {
+  const nav = useNav();
+  const fade = useRef(new Animated.Value(0)).current;
+  const slide = useRef(new Animated.Value(16)).current;
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        useNativeDriver: true,
-      }),
+      Animated.timing(fade, { toValue: 1, duration: 500, useNativeDriver: false }),
+      Animated.timing(slide, { toValue: 0, duration: 500, useNativeDriver: false }),
     ]).start();
-  }, []);
+  }, [fade, slide]);
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.navy} />
+    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right', 'bottom']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header / Nav */}
-        <View style={styles.header}>
-          <View style={styles.wordmark}>
-            <Text style={styles.wordmarkText}>Civic</Text>
-            <View style={styles.wordmarkDot} />
+        <View style={styles.inner}>
+          <View style={styles.header}>
+            <View style={styles.wordmark}>
+              <Text style={styles.wordmarkText}>Civic</Text>
+              <View style={styles.wordmarkDot} />
+            </View>
+            <Pressable
+              onPress={() => nav.push('About')}
+              accessibilityRole="button"
+              accessibilityLabel="About Civic"
+              hitSlop={12}
+              style={({ pressed }) => [styles.aboutBtn, pressed && styles.pressed]}
+            >
+              <Text style={styles.aboutText}>About</Text>
+            </Pressable>
           </View>
-          <TouchableOpacity style={styles.signInBtn}>
-            <Text style={styles.signInText}>Sign in</Text>
-          </TouchableOpacity>
+
+          <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
+            <Text style={styles.eyebrow}>Northern Virginia · civic help</Text>
+            <Text style={styles.headline} accessibilityRole="header">
+              Your message, in the right inbox.
+            </Text>
+            <Text style={styles.heroBody}>
+              Most people send a concern to an office that cannot act on it. Civic finds the office
+              that can, explains why, and helps you write something a staffer will actually read.
+            </Text>
+
+            <View style={styles.ctaBlock}>
+              <Button
+                label="Find where my issue goes"
+                variant="amber"
+                onPress={() => nav.push('Topic')}
+                accessibilityHint="Opens the list of issue topics"
+              />
+              <Button
+                label="Browse offices of government"
+                variant="secondary"
+                onPress={() => nav.push('Offices')}
+                style={styles.secondaryCta}
+              />
+            </View>
+
+            <View style={styles.trustRow}>
+              {TRUST.map((item) => (
+                <View key={item} style={styles.trustItem}>
+                  <Text style={styles.trustCheck}>✓</Text>
+                  <Text style={styles.trustText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          </Animated.View>
         </View>
 
-        {/* Hero */}
-        <Animated.View
-          style={[
-            styles.hero,
-            { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
-          ]}
-        >
-          <Text style={styles.heroLabel}>Your voice. Their inbox.</Text>
-          <Text style={styles.heroHeadline}>
-            Direct feedback to every elected official who represents you.
-          </Text>
-          <Text style={styles.heroSub}>
-            From your school board to the U.S. Senate — anonymously, safely, and routed to the right office automatically.
-          </Text>
-        </Animated.View>
-
-        {/* CTAs */}
-        <View style={styles.ctaRow}>
-          <TouchableOpacity
-            style={styles.ctaPrimary}
-            activeOpacity={0.85}
-            onPress={() => navigation?.navigate('ConstituentFlow')}
-          >
-            <Text style={styles.ctaPrimaryText}>I'm a constituent</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.ctaSecondary}
-            activeOpacity={0.85}
-            onPress={() => navigation?.navigate('OfficialFlow')}
-          >
-            <Text style={styles.ctaSecondaryText}>I'm an official</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Divider */}
         <View style={styles.divider} />
 
-        {/* Features */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Built for real civic engagement</Text>
-          <View style={styles.featureGrid}>
-            {FEATURES.map((f, i) => (
-              <View key={i} style={styles.featurePill}>
-                <Text style={styles.featureIcon}>{f.icon}</Text>
-                <Text style={styles.featureLabel}>{f.label}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* How it works — constituent side */}
-        <View style={styles.section}>
+        <View style={[styles.inner, styles.section]}>
           <Text style={styles.sectionTitle}>How it works</Text>
-
-          <Step
-            number="1"
-            title="Enter your address"
-            body="We map your location to every level of government — federal, state, county, and local."
-          />
-          <Step
-            number="2"
-            title="Pick your issue"
-            body="Choose a category or describe your concern. Civic finds the right official and office."
-          />
-          <Step
-            number="3"
-            title="Send feedback anonymously"
-            body="Your identity stays private. Officials see aggregated trends, not personal data."
-          />
+          {STEPS.map((step) => (
+            <View key={step.number} style={styles.step}>
+              <View style={styles.stepNum}>
+                <Text style={styles.stepNumText}>{step.number}</Text>
+              </View>
+              <View style={styles.stepBody}>
+                <Text style={styles.stepTitle}>{step.title}</Text>
+                <Text style={styles.stepText}>{step.body}</Text>
+              </View>
+            </View>
+          ))}
         </View>
 
-        {/* Officials CTA block */}
-        <View style={styles.officialBlock}>
-          <Text style={styles.officialBlockTitle}>For elected officials</Text>
-          <Text style={styles.officialBlockBody}>
-            See what your constituents actually care about. Send targeted micro-polls. Spot emerging issues before they become crises.
-          </Text>
-          <TouchableOpacity style={styles.officialBlockBtn} activeOpacity={0.85}>
-            <Text style={styles.officialBlockBtnText}>Request official access</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.inner}>
+          <View style={styles.privacyCard}>
+            <Text style={styles.privacyTitle}>Your message stays yours</Text>
+            <Text style={styles.privacyBody}>
+              There is no account and no server. Messages you save are kept only on this device, and
+              the app never asks for your name unless you choose to add it. Nothing is sent anywhere
+              without you opening the office’s own contact page.
+            </Text>
+          </View>
 
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Built for the Congressional App Challenge · Virginia's 10th District
-          </Text>
+          <View style={styles.officialBlock}>
+            <Text style={styles.officialBlockTitle}>For elected officials and staff</Text>
+            <Text style={styles.officialBlockBody}>
+              See how the same messages look when grouped by issue and level of government. The
+              demo dashboard only reads messages saved on this device.
+            </Text>
+            <Button
+              label="Open the demo dashboard"
+              variant="secondary"
+              onPress={() => nav.push('Dashboard')}
+              style={styles.officialBtn}
+            />
+          </View>
+
+          <Pressable
+            onPress={() => nav.push('About')}
+            accessibilityRole="button"
+            accessibilityLabel="About Civic, privacy, and sources"
+            style={({ pressed }) => [styles.footerLink, pressed && styles.pressed]}
+          >
+            <Text style={styles.footerText}>
+              Built for the Congressional App Challenge · Virginia’s 10th District
+            </Text>
+            <Text style={styles.footerLinkText}>About, privacy & sources</Text>
+          </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-}
-
-function Step({ number, title, body }) {
-  return (
-    <View style={styles.step}>
-      <View style={styles.stepNumCol}>
-        <View style={styles.stepNum}>
-          <Text style={styles.stepNumText}>{number}</Text>
-        </View>
-        <View style={styles.stepLine} />
-      </View>
-      <View style={styles.stepContent}>
-        <Text style={styles.stepTitle}>{title}</Text>
-        <Text style={styles.stepBody}>{body}</Text>
-      </View>
-    </View>
   );
 }
 
@@ -180,166 +164,124 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: spacing.xxl,
+    paddingBottom: spacing.xl,
   },
-
-  // Header
+  inner: {
+    width: '100%',
+    maxWidth: 680,
+    alignSelf: 'center',
+    paddingHorizontal: spacing.lg,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
     paddingBottom: spacing.sm,
   },
   wordmark: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
   },
   wordmarkText: {
-    fontSize: font.size.lg,
+    fontSize: font.size.lg + 2,
     fontWeight: font.weight.bold,
     color: colors.white,
     letterSpacing: -0.5,
   },
   wordmarkDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: 7,
+    height: 7,
+    borderRadius: 4,
     backgroundColor: colors.amber,
-    marginBottom: 8,
+    marginLeft: 3,
+    marginBottom: 9,
   },
-  signInBtn: {
+  aboutBtn: {
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.md,
     borderRadius: radius.pill,
     borderWidth: 1,
-    borderColor: colors.navyLight,
+    borderColor: colors.borderDark,
   },
-  signInText: {
+  aboutText: {
     fontSize: font.size.sm,
     color: colors.steelLight,
     fontWeight: font.weight.medium,
   },
-
-  // Hero
-  hero: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.lg,
+  pressed: {
+    opacity: 0.7,
   },
-  heroLabel: {
-    fontSize: font.size.sm,
-    color: colors.amber,
+  eyebrow: {
+    fontSize: font.size.xs,
     fontWeight: font.weight.semibold,
+    letterSpacing: 1.4,
+    textTransform: 'uppercase',
+    color: colors.amber,
+    marginTop: spacing.lg,
     marginBottom: spacing.sm,
-    letterSpacing: 0.2,
   },
-  heroHeadline: {
+  headline: {
     fontSize: font.size.xxl,
     fontWeight: font.weight.bold,
     color: colors.white,
-    lineHeight: font.size.xxl * 1.15,
-    letterSpacing: -0.8,
+    letterSpacing: -0.9,
+    lineHeight: font.size.xxl * 1.1,
     marginBottom: spacing.md,
   },
-  heroSub: {
+  heroBody: {
     fontSize: font.size.md,
     color: colors.steelLight,
     lineHeight: font.size.md * 1.6,
   },
-
-  // CTAs
-  ctaRow: {
+  ctaBlock: {
+    marginTop: spacing.lg,
+  },
+  secondaryCta: {
+    marginTop: spacing.sm,
+    backgroundColor: colors.navyLight,
+    borderColor: colors.borderDark,
+  },
+  trustRow: {
     flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
-    gap: spacing.sm,
+    flexWrap: 'wrap',
+    marginTop: spacing.md,
     marginBottom: spacing.lg,
   },
-  ctaPrimary: {
-    flex: 1,
-    backgroundColor: colors.amber,
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
+  trustItem: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginRight: spacing.md,
+    marginBottom: spacing.xs,
   },
-  ctaPrimaryText: {
-    fontSize: font.size.md,
-    fontWeight: font.weight.semibold,
-    color: colors.black,
+  trustCheck: {
+    color: colors.amber,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.bold,
+    marginRight: 4,
   },
-  ctaSecondary: {
-    flex: 1,
-    backgroundColor: colors.navyLight,
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.steel,
+  trustText: {
+    color: colors.steelLight,
+    fontSize: font.size.sm,
   },
-  ctaSecondaryText: {
-    fontSize: font.size.md,
-    fontWeight: font.weight.semibold,
-    color: colors.white,
-  },
-
-  // Divider
   divider: {
     height: 1,
     backgroundColor: colors.navyLight,
-    marginHorizontal: spacing.lg,
-    marginBottom: spacing.xl,
+    marginVertical: spacing.lg,
   },
-
-  // Sections
   section: {
-    paddingHorizontal: spacing.lg,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
   sectionTitle: {
     fontSize: font.size.lg,
     fontWeight: font.weight.bold,
     color: colors.white,
     marginBottom: spacing.md,
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
   },
-
-  // Feature pills
-  featureGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  featurePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    backgroundColor: colors.navyLight,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(107,122,153,0.3)',
-  },
-  featureIcon: {
-    fontSize: 14,
-  },
-  featureLabel: {
-    fontSize: font.size.sm,
-    color: colors.steelLight,
-    fontWeight: font.weight.medium,
-  },
-
-  // Steps
   step: {
     flexDirection: 'row',
-    marginBottom: spacing.lg,
-    gap: spacing.md,
-  },
-  stepNumCol: {
-    alignItems: 'center',
-    width: 28,
+    marginBottom: spacing.md,
   },
   stepNum: {
     width: 28,
@@ -348,81 +290,88 @@ const styles = StyleSheet.create({
     backgroundColor: colors.amber,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: spacing.md,
   },
   stepNumText: {
     fontSize: font.size.sm,
     fontWeight: font.weight.bold,
     color: colors.black,
   },
-  stepLine: {
+  stepBody: {
     flex: 1,
-    width: 1,
-    backgroundColor: colors.navyLight,
-    marginTop: spacing.xs,
-  },
-  stepContent: {
-    flex: 1,
-    paddingBottom: spacing.md,
+    paddingTop: 3,
   },
   stepTitle: {
     fontSize: font.size.md,
     fontWeight: font.weight.semibold,
     color: colors.white,
-    marginBottom: spacing.xs,
+    marginBottom: 2,
   },
-  stepBody: {
+  stepText: {
     fontSize: font.size.sm,
     color: colors.steel,
-    lineHeight: font.size.sm * 1.6,
+    lineHeight: font.size.sm * 1.55,
   },
-
-  // Officials block
-  officialBlock: {
-    marginHorizontal: spacing.lg,
+  privacyCard: {
     backgroundColor: colors.navyLight,
     borderRadius: radius.lg,
     padding: spacing.lg,
+    marginBottom: spacing.md,
     borderWidth: 1,
-    borderColor: 'rgba(107,122,153,0.25)',
-    marginBottom: spacing.xl,
+    borderColor: colors.borderDark,
   },
-  officialBlockTitle: {
-    fontSize: font.size.lg,
+  privacyTitle: {
+    fontSize: font.size.md,
     fontWeight: font.weight.bold,
     color: colors.white,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs + 2,
   },
-  officialBlockBody: {
+  privacyBody: {
     fontSize: font.size.sm,
     color: colors.steelLight,
     lineHeight: font.size.sm * 1.6,
-    marginBottom: spacing.md,
   },
-  officialBlockBtn: {
+  officialBlock: {
     backgroundColor: 'transparent',
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
     borderWidth: 1,
-    borderColor: colors.amber,
-    alignSelf: 'flex-start',
+    borderColor: colors.borderDark,
+    marginBottom: spacing.lg,
   },
-  officialBlockBtnText: {
+  officialBlockTitle: {
+    fontSize: font.size.md,
+    fontWeight: font.weight.bold,
+    color: colors.white,
+    marginBottom: spacing.xs + 2,
+  },
+  officialBlockBody: {
     fontSize: font.size.sm,
-    color: colors.amber,
-    fontWeight: font.weight.semibold,
+    color: colors.steel,
+    lineHeight: font.size.sm * 1.6,
+    marginBottom: spacing.sm,
   },
-
-  // Footer
-  footer: {
+  officialBtn: {
+    alignSelf: 'flex-start',
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
+    minHeight: 44,
+  },
+  footerLink: {
     alignItems: 'center',
+    paddingVertical: spacing.md,
   },
   footerText: {
+    ...text.small,
     fontSize: font.size.xs,
     color: colors.steel,
     textAlign: 'center',
-    lineHeight: font.size.xs * 1.6,
+    lineHeight: font.size.xs * 1.7,
+  },
+  footerLinkText: {
+    fontSize: font.size.xs,
+    color: colors.steelLight,
+    fontWeight: font.weight.semibold,
+    marginTop: spacing.xs,
+    textDecorationLine: 'underline',
   },
 });

@@ -1,1 +1,8 @@
-node_modules/**
+node_modules/
+.expo/
+dist/
+web-build/
+.env
+.env.*
+*.log
+.DS_Store
