@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { AppProvider } from './src/context/AppContext';
+import { CivicProvider } from './src/context/CivicContext';
 import Navigator from './src/navigation/Navigator';
 
 // Every screen uses a white header and a light content area, so the status
@@ -11,7 +12,9 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <AppProvider>
-        <Navigator />
+        <CivicProvider>
+          <Navigator />
+        </CivicProvider>
       </AppProvider>
     </SafeAreaProvider>
   );

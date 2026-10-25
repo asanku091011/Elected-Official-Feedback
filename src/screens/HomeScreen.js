@@ -4,6 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNav } from '../navigation/Navigator';
 import Button from '../components/Button';
 import Logo, { LogoMark } from '../components/Logo';
+import Badge from '../components/Badge';
+import { useCivic } from '../context/CivicContext';
+import { labelForVA10 } from '../data/jurisdictions';
 import { colors, spacing, radius, font, text } from '../theme';
 
 const STEPS = [
@@ -28,6 +31,7 @@ const TRUST = ['No account', 'No tracking', 'Saved on your device'];
 
 export default function HomeScreen() {
   const nav = useNav();
+  const { jurisdiction, unreadCount } = useCivic();
   const fade = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(16)).current;
 
@@ -65,7 +69,7 @@ export default function HomeScreen() {
           <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
             <View style={styles.hero}>
               <Logo width={200} style={styles.heroLogo} />
-              <Text style={styles.eyebrow}>Northern Virginia · civic help</Text>
+              <Text style={styles.eyebrow}>civic help</Text>
               <Text style={styles.headline} accessibilityRole="header">
                 Your message, in the right inbox.
               </Text>
@@ -82,10 +86,21 @@ export default function HomeScreen() {
                   accessibilityHint="Opens the list of issue topics"
                 />
                 <Button
-                  label="Browse offices of government"
+                  label={
+                    unreadCount > 0
+                      ? `Updates from your area (${unreadCount} new)`
+                      : 'Updates from your area'
+                  }
                   variant="secondary"
-                  onPress={() => nav.push('Offices')}
+                  onPress={() => nav.push('Feed')}
                   style={styles.secondaryCta}
+                  accessibilityHint="Opens the sample announcement and poll feed for your area"
+                />
+                <Button
+                  label="Browse offices of government"
+                  variant="ghost"
+                  onPress={() => nav.push('Offices')}
+                  style={styles.tertiaryCta}
                 />
               </View>
 
@@ -120,6 +135,63 @@ export default function HomeScreen() {
           </View>
         </View>
 
+        <View style={[styles.inner, styles.section]}>
+          <Text style={styles.sectionTitle}>Your area</Text>
+          <View style={styles.areaCard}>
+            <View style={styles.areaBody}>
+              <Text style={styles.areaName}>{jurisdiction.name}</Text>
+              <Badge
+                label={labelForVA10(jurisdiction.inVA10)}
+                tone={
+                  jurisdiction.inVA10 === 'full'
+                    ? 'success'
+                    : jurisdiction.inVA10 === 'partial'
+                      ? 'warning'
+                      : 'neutral'
+                }
+                style={styles.areaBadge}
+              />
+              <Text style={styles.areaNote}>
+                CivLink stores an area, not an address. Updates and polls only appear for the area you
+                pick.
+              </Text>
+            </View>
+            <Button
+              label="Change area"
+              variant="secondary"
+              full={false}
+              onPress={() => nav.push('Jurisdiction')}
+              style={styles.areaBtn}
+            />
+          </View>
+          <View style={styles.linkRow}>
+            <Pressable
+              onPress={() => nav.push('LocalGovernment', { jurisdictionId: jurisdiction.id })}
+              accessibilityRole="button"
+              accessibilityLabel={`Open ${jurisdiction.name} local government links`}
+              style={({ pressed }) => [styles.linkChip, pressed && styles.pressed]}
+            >
+              <Text style={styles.linkChipText}>Local government links</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => nav.push('HowItWorks')}
+              accessibilityRole="button"
+              accessibilityLabel="How CivLink communicates"
+              style={({ pressed }) => [styles.linkChip, pressed && styles.pressed]}
+            >
+              <Text style={styles.linkChipText}>How updates travel</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => nav.push('DataSources')}
+              accessibilityRole="button"
+              accessibilityLabel="Data sources and dates"
+              style={({ pressed }) => [styles.linkChip, pressed && styles.pressed]}
+            >
+              <Text style={styles.linkChipText}>Data sources</Text>
+            </Pressable>
+          </View>
+        </View>
+
         <View style={styles.inner}>
           <View style={styles.privacyCard}>
             <Text style={styles.privacyTitle}>Your message stays yours</Text>
@@ -133,16 +205,35 @@ export default function HomeScreen() {
           <View style={styles.officialBlock}>
             <Text style={styles.officialBlockTitle}>For elected officials and staff</Text>
             <Text style={styles.officialBlockBody}>
-              See how the same messages look when grouped by issue and level of government. The
-              demo dashboard only reads messages saved on this device.
+              The CivLink Official Portal is a prototype of the office side: write a neutral poll or
+              announcement, publish it to the in-app feed, and see aggregate results and resident
+              questions. It uses sample data only and is not connected to any government office.
             </Text>
             <Button
-              label="Open the demo dashboard"
-              variant="secondary"
-              onPress={() => nav.push('Dashboard')}
+              label="Open the Official Portal"
+              onPress={() => nav.push('PortalSignIn')}
               style={styles.officialBtn}
             />
+            <Button
+              label="See the feedback dashboard"
+              variant="secondary"
+              onPress={() => nav.push('Dashboard')}
+              style={styles.officialBtnSecondary}
+            />
           </View>
+
+          <Pressable
+            onPress={() => nav.push('GetCivLink')}
+            accessibilityRole="button"
+            accessibilityLabel="Get CivLink on your phone or computer"
+            style={({ pressed }) => [styles.getCard, pressed && styles.pressed]}
+          >
+            <Text style={styles.getTitle}>Get CivLink on your phone</Text>
+            <Text style={styles.getBody}>
+              Open the web app, scan the QR code, or add it to your Home Screen. No app store needed.
+            </Text>
+            <Text style={styles.footerLinkText}>Open the “Get CivLink” page</Text>
+          </Pressable>
 
           <Pressable
             onPress={() => nav.push('About')}
@@ -258,6 +349,60 @@ const styles = StyleSheet.create({
   },
   secondaryCta: {
     marginTop: spacing.sm,
+  },
+  tertiaryCta: {
+    marginTop: spacing.xs,
+    minHeight: 40,
+  },
+  areaCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  areaBody: {
+    marginBottom: spacing.sm,
+  },
+  areaName: {
+    fontFamily: font.family,
+    fontSize: font.size.md,
+    fontWeight: font.weight.bold,
+    color: colors.ink,
+    marginBottom: spacing.xs,
+  },
+  areaBadge: {
+    maxWidth: '100%',
+  },
+  areaNote: {
+    ...text.small,
+    marginTop: spacing.xs,
+  },
+  areaBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: spacing.lg,
+    minHeight: 44,
+  },
+  linkRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  linkChip: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+    borderRadius: radius.pill,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    marginRight: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  linkChipText: {
+    fontFamily: font.family,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+    color: colors.tealDeep,
   },
   trustRow: {
     flexDirection: 'row',
@@ -388,9 +533,33 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   officialBtn: {
-    alignSelf: 'flex-start',
+    alignSelf: 'stretch',
     paddingHorizontal: spacing.lg,
     minHeight: 44,
+  },
+  officialBtnSecondary: {
+    marginTop: spacing.sm,
+    minHeight: 44,
+  },
+  getCard: {
+    backgroundColor: colors.tealSoft,
+    borderWidth: 1,
+    borderColor: colors.tealBorder,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+  },
+  getTitle: {
+    fontFamily: font.family,
+    fontSize: font.size.sm + 1,
+    fontWeight: font.weight.bold,
+    color: colors.ink,
+    marginBottom: 3,
+  },
+  getBody: {
+    ...text.small,
+    color: colors.ink,
+    marginBottom: spacing.xs,
   },
   footerLink: {
     alignItems: 'center',

@@ -66,6 +66,38 @@ export default function AboutScreen() {
         The idea is simple: a message sent to the wrong office gets filed away. A message sent to the
         right office, with a specific place and a specific ask, has a chance to change something.
       </Text>
+      <Text style={styles.body}>
+        An updates feed lets residents read announcements and answer neutral polls for their area,
+        and an Official Portal prototype shows the office side. The portal uses a sample organization
+        only: it is not connected to any real office, and every sample post says so.
+      </Text>
+
+      <View style={styles.linkGrid}>
+        <Button
+          label="How CivLink communicates"
+          variant="secondary"
+          onPress={() => nav.push('HowItWorks')}
+          style={styles.linkBtn}
+        />
+        <Button
+          label="Data sources and dates"
+          variant="secondary"
+          onPress={() => nav.push('DataSources')}
+          style={styles.linkBtn}
+        />
+        <Button
+          label="Content policy and safety"
+          variant="secondary"
+          onPress={() => nav.push('ContentPolicy')}
+          style={styles.linkBtn}
+        />
+        <Button
+          label="Get CivLink on your phone"
+          variant="secondary"
+          onPress={() => nav.push('GetCivLink')}
+          style={styles.linkBtn}
+        />
+      </View>
 
       <Text style={styles.sectionTitle}>How the routing works</Text>
       <Text style={styles.body}>
@@ -111,6 +143,12 @@ export default function AboutScreen() {
           happens when you tap a link to an official website.
         </Text>
         <Text style={styles.privacyLine}>
+          <Text style={styles.privacyStrong}>Also stored on this device: </Text>
+          sample announcements and polls, your poll answers, questions you send to the sample
+          office, and demo portal actions. A poll answer stores the poll, the chosen options, and
+          your selected area — never a name or address. Officials see totals only.
+        </Text>
+        <Text style={styles.privacyLine}>
           <Text style={styles.privacyStrong}>Delete it anytime: </Text>
           remove a single message after saving it, or clear everything from the dashboard.
         </Text>
@@ -126,22 +164,24 @@ export default function AboutScreen() {
       <Text style={styles.sectionTitle}>How this was built</Text>
       <Text style={styles.body}>
         Built with React Native and Expo. It works on iOS, Android, and the web from the same code.
-        App storage uses AsyncStorage and copying uses expo-clipboard, both open source.
+        App storage uses AsyncStorage, copying uses expo-clipboard, and the QR code on the Get CivLink
+        screen is drawn on the device with qrcode-generator. All three are open source.
       </Text>
 
-      <Text style={styles.sectionTitle}>AI disclosure</Text>
+      <Text style={styles.sectionTitle}>Honest limitations</Text>
       <Text style={styles.body}>
-        An AI coding assistant helped write and review this code at the student’s direction. The
-        student chose the problem, the features, and the design, tested the app, and can explain how
-        each screen works. A dated log of the AI-assisted work is kept in AI_USAGE.md in the source
-        code.
+        This is a prototype, not a service. There is no server and no real sign-in, no real official
+        has been onboarded, and the in-app feed is the only delivery channel. Push notifications and
+        email digests are not built. Only parts of Fairfax and Prince William counties are in VA-10,
+        Arlington is in VA-8, and the app cannot tell which part of a split county an address is in.
+        CivLink collects no address and has no live official lookup.
       </Text>
 
       <Text style={styles.sectionTitle}>Credits</Text>
       <Text style={styles.body}>
         The CivLink logo and app icons are used exactly as supplied in assets/branding. Open source
-        libraries: React, React Native, Expo, AsyncStorage, and expo-clipboard. No third-party images
-        or copyrighted assets are included.
+        libraries: React, React Native, Expo, AsyncStorage, expo-clipboard, and qrcode-generator
+        (MIT). No third-party images or copyrighted assets are included.
       </Text>
 
       <View style={styles.footerBlock}>
@@ -167,6 +207,14 @@ const styles = StyleSheet.create({
   body: {
     ...text.body,
     marginBottom: spacing.sm,
+  },
+  linkGrid: {
+    marginTop: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  linkBtn: {
+    marginBottom: spacing.sm,
+    minHeight: 44,
   },
   sourceList: {
     marginTop: spacing.xs,

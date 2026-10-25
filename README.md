@@ -2,8 +2,10 @@
 
 # CivLink — find the office that can actually act
 
-A mobile app that helps a Northern Virginia resident figure out which office of government handles
-their concern, then write a clear message and send it through that office's own contact page.
+A working prototype that helps a Northern Virginia resident figure out which office of government
+handles their concern, write a clear message, and follow updates from their area. It also includes an
+**Official Portal** prototype that shows the office side: neutral polls, announcements, aggregate
+results, and resident questions.
 
 Built for the **2026 Congressional App Challenge** — Virginia's 10th District.
 
@@ -24,86 +26,96 @@ routing first:
 4. **Preview and save.** The message is saved on the device with a reference number, and the app
    opens the office's official website so the resident sends it themselves.
 
-A demo dashboard groups saved messages by level of government and by issue, showing what staff
-would see if the app were connected to an office.
+The resident side also has an **updates feed** for the selected locality. Seeded sample
+announcements and polls appear there, residents can answer a poll once, ask a question, report
+content, and control what appears in the feed.
+
+The **Official Portal** is a separate, clearly labeled demo:
+
+- sign in as a sample official or sample administrator (no password — there is no real auth),
+- dashboard counts for active polls, scheduled posts, unread questions, and total responses,
+- create a poll (2 to 6 options, single/multiple/1–5 rating), choose areas, schedule it, and publish
+  only after a four-item neutrality checklist and automated wording hints,
+- view aggregate results, turnout by locality, and export a CSV,
+- create, edit, schedule, publish, and archive announcements,
+- read resident questions and reply publicly or privately, then mark them resolved,
+- verify a `.gov`-format access request as the administrator and create a demo official account,
+- see an audit log of publish, edit, archive, approval, and reply actions.
 
 ### Who it is for
 
 Residents of Virginia's 10th District — students, parents, commuters, and neighbors in Loudoun and
 the surrounding counties — who have a local problem and no idea whether to call the county, VDOT,
-Richmond, or Congress.
+Richmond, or Congress. The same screens support neighboring Northern Virginia localities; **the
+pilot district is VA-10**.
+
+### District accuracy
+
+- All of Loudoun, Fauquier, and Rappahannock counties, and the cities of Manassas and Manassas Park,
+  are in VA-10.
+- **Only parts of Fairfax and Prince William counties are in VA-10.**
+- **Arlington County is in VA-8**, not VA-10. CivLink labels it as an expansion area and never says
+  it is in the pilot district.
+- Virginia's 2026 redistricting amendment was struck down in May 2026, so the current map applies.
 
 ### What it deliberately does not do
 
-- No account, no server, no analytics. Messages stay on the device.
-- CivLink does not email or deliver anything. The resident stays in control of what they send.
-- No official sign-in or micro-polls. Those would need a secure backend and verified accounts, which
-  is out of scope for this submission.
+- No account or server for residents. Messages stay on the device.
+- No real officials, offices, or agencies. The portal ships **sample organizations only**, and every
+  portal screen carries a "Prototype with sample data" banner.
+- No push notifications, email digests, or SMS. The in-app feed is the only delivery channel, and the
+  app says so instead of faking delivery.
+- No live address lookup or official lookup API.
 
 ---
 
 ## Screenshots
 
-| | |
+| Resident side | Official Portal |
 |---|---|
-| ![Home](submission/screenshots/01-home.png) | ![Topics](submission/screenshots/02-topics.png) |
-| ![Routing](submission/screenshots/03-routing.png) | ![Compose](submission/screenshots/04-compose.png) |
-| ![Preview](submission/screenshots/05-preview.png) | ![Sent](submission/screenshots/06-sent.png) |
-| ![Dashboard](submission/screenshots/07-dashboard.png) | ![Offices](submission/screenshots/08-offices.png) |
+| ![Home](submission/screenshots/01-home.png) | ![Portal dashboard](submission/screenshots/17-portal-dashboard.png) |
+| ![Updates feed](submission/screenshots/11-feed.png) | ![Portal polls](submission/screenshots/18-portal-polls.png) |
+| ![Poll results](submission/screenshots/12-poll-results.png) | ![Poll results for staff](submission/screenshots/20-portal-poll-results.png) |
+| ![How it works](submission/screenshots/13-how-it-works.png) | ![Poll editor](submission/screenshots/19-poll-editor.png) |
+| ![Your area](submission/screenshots/14-your-area.png) | ![Announcements](submission/screenshots/23-announcements.png) |
+| ![Data sources](submission/screenshots/16-data-sources.png) | ![Resident questions](submission/screenshots/24-questions.png) |
 
-The About screen and a small-phone layout are in `submission/screenshots/09-about.png` and
-`10-small-screen.png`.
+More screens: [local government links](submission/screenshots/15-local-government.png),
+[content policy](submission/screenshots/22-content-policy.png),
+[audit log](submission/screenshots/25-audit-log.png), and
+[Get CivLink](submission/screenshots/21-get-civlink.png). The routing, compose, and preview screens
+are in `submission/screenshots/02`–`10`.
 
 ---
 
-## Brand and theme
+## How communication works
 
-The interface is built from the logo. Every color lives in `src/theme/index.js`; no screen hardcodes
-its own palette.
+```mermaid
+flowchart LR
+  A["Official writes a poll<br/>or announcement"] --> B["CivLink checks it<br/>neutrality checklist,<br/>verified account"]
+  B --> C["In-app feed for residents<br/>of the chosen areas"]
+  C --> D["Resident reads, votes,<br/>or asks a question"]
+  D --> E["Official sees aggregate<br/>poll results and questions"]
+  E --> A
+```
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| Teal | `#38CBD0` | primary buttons, highlights, active states |
-| Deep teal | `#127074` | links and any teal text (5.8:1 on white) |
-| Ink | `#0E1014` | headings, body text, bold outlines |
-| Slate | `#76848D` | icons and outlines only |
-| Slate text | `#5A666E` | secondary text (5.9:1 on white) |
-| White | `#FFFFFF` | page background |
-| Soft surface | `#F4F7F8` | cards and section backgrounds |
-| Border | `#DDE3E6` | card and divider borders |
-
-Accessibility decisions worth knowing:
-
-- Teal `#38CBD0` is a light color. White text on it is only 1.98:1, so every teal button and badge
-  uses **ink labels** (9.6:1). White text appears only on the deep teal (5.8:1).
-- The brand slate `#76848D` is 3.85:1 on white, so it is used for icons and outlines, never body
-  copy. Secondary text uses `#5A666E` (5.9:1).
-- Corners stay between 8 and 12px, buttons and the back control use a 2px ink outline to echo the
-  ballot-box mark, and one clean sans-serif stack is used everywhere: the platform's own system font
-  (SF on iOS, Roboto on Android, the system UI font on web) so text renders consistently and nothing
-  has to be downloaded.
-
-### Logo usage
-
-The files in `assets/branding/` are used exactly as supplied — never redrawn, recolored, cropped, or
-stretched, and always with clear space around the mark.
-
-- Welcome screen: full logo, centered, with the tagline. White background only.
-- Screen headers: the square icon on the left.
-- App icon, splash, adaptive icon, and favicon: the supplied icon files, copied to `assets/icon.png`,
-  `assets/adaptive-icon.png`, and `assets/favicon.png`.
-- The logo never sits on a dark or busy background; there is no dark mode.
+Only the in-app feed is implemented. Push notifications would need a push server and iOS install
+rules; an email digest would need an email address, which CivLink never collects. The
+[How it works screen](src/screens/HowItWorksScreen.js) states this in the app.
 
 ---
 
 ## Tech stack
 
 - **React Native 0.86** with **Expo SDK 57** — one codebase for iOS, Android, and web
-- **AsyncStorage** for on-device message storage
-- **expo-clipboard** for copying a saved message
+- **AsyncStorage** for on-device messages and demo civic data
+- **expo-clipboard** for copying a saved message, a question reply, or CSV results
+- **qrcode-generator** (MIT) for the on-device QR code — nothing is fetched from a QR service
 - Plain JavaScript, no state library and no navigation library. `src/navigation/Navigator.js` is a
-  small readable stack, and `src/context/AppContext.js` holds the draft and saved messages.
-- Node.js 22 for the test runner
+  small readable stack; `src/context/AppContext.js` holds messages and the draft, and
+  `src/context/CivicContext.js` holds the demo portal state.
+- Node.js 22 for the test runner (40 tests, no test dependencies)
+- A small post-export script adds the PWA manifest, icons, and service worker
 
 ---
 
@@ -111,101 +123,147 @@ stretched, and always with clear space around the mark.
 
 ```bash
 npm install
-npx expo start
+npx expo start        # press w for the web build, or scan with Expo Go
 ```
-
-Scan the QR code with the Expo Go app, or press `w` to open the web build.
 
 ```bash
-npm test      # unit tests for routing data, validation, and aggregation
-npm run build:web
+npm test             # 40 unit tests: routing data, validation, polls, CSV, jurisdiction facts
+npm run build:web    # static web build in dist/, with PWA manifest and service worker
 ```
+
+The tests cover the poll rules (one response, closing, sample-data tallies, the five-response
+threshold, neutrality gating), CSV escaping, the `.gov` check, rate limiting, and every jurisdiction
+fact used in the app.
+
+### Deploy the web version
+
+The build is a static site. On Netlify or Vercel, connect the repository and use:
+
+- build command: `npm run build:web`
+- publish directory: `dist`
+
+`netlify.toml` and `vercel.json` are included. Netlify Drop also works: run the build and drag
+`dist/` onto the site. Set `EXPO_PUBLIC_WEB_APP_URL` to the final HTTPS address so a phone build
+shows the same link and QR code; in a browser, the app reads its own address instead.
+
+The manifest uses `display: standalone`, stable `id`, 192px and 512px icons, and a 180px
+`apple-touch-icon`. iPhone: open the link in Safari, Share, then Add to Home Screen. Android: open
+the Chrome menu, then Install app. A normal browser tab needs no install.
 
 ---
 
 ## Project structure
 
 ```
-├── App.js                     # providers and status bar
-├── index.js                   # Expo entry point
-├── app.json                   # CivLink name, icons, splash
-├── assets/
-│   ├── branding/              # supplied logo and icon files (unmodified)
-│   ├── icon.png               # app icon (from branding)
-│   ├── adaptive-icon.png      # Android adaptive icon (from branding)
-│   └── favicon.png            # web favicon (from branding)
+├── App.js                       # providers and status bar
+├── index.js                     # Expo entry point
+├── app.json                     # name, icons, splash
+├── assets/branding/             # supplied logo and icons (unmodified)
+├── scripts/finalize-web.mjs     # PWA manifest, icons, service worker after export
 ├── src/
-│   ├── components/            # Button, Field, Card, Notice, Logo, Screen shell, ...
-│   ├── context/AppContext.js  # draft message + saved messages
-│   ├── data/offices.js        # 26 offices and the four levels of government
-│   ├── data/topics.js         # 13 topics: routing, what they can do, limits, template
-│   ├── lib/                   # storage, validation, aggregation, formatting, links
-│   ├── navigation/Navigator.js
-│   ├── screens/               # Home, Topic, Route, Compose, Preview, Sent, Offices, Dashboard, About
-│   └── theme/index.js         # palette, type scale, radii, spacing, logo aspect ratio
-├── tests/                     # node:test files
-└── submission/                # screenshots and written submission pieces
+│   ├── components/              # Screen shell, PortalScreen, Button, Field, Badge, CheckRow, QR…
+│   ├── context/
+│   │   ├── AppContext.js        # draft message + saved messages
+│   │   └── CivicContext.js      # area, demo accounts, polls, announcements, questions, votes
+│   ├── data/
+│   │   ├── offices.js           # 26 offices and the four levels of government
+│   │   ├── topics.js            # 13 topics, routing, limits, template
+│   │   ├── jurisdictions.js     # 8 localities, official links, VA-10 status, check dates
+│   │   ├── seedContent.js       # labeled sample polls, announcements, questions
+│   │   └── accounts.js          # sample portal accounts and the .gov format check
+│   ├── lib/                     # storage, validation, aggregation, polls, CSV, moderation
+│   ├── navigation/Navigator.js  # the screen stack
+│   ├── screens/                 # 29 screens: resident, portal, jurisdiction, policy
+│   └── theme/index.js           # palette, type scale, radii, spacing
+├── tests/                       # node:test files
+└── submission/                  # screenshots and written submission pieces
 ```
 
 ---
 
-## Where the routing information comes from
+## Data sources and credits
 
-Each topic's explanation was written from the published responsibilities of the office it routes to,
-and every link points at that office's official public site:
+The sample polls and announcements were written for this prototype and are labeled as sample
+wherever they appear. Locality facts and links were checked against the locality's own site on
+**2026-10-23**:
 
-- [Loudoun County government](https://www.loudoun.gov) — Board of Supervisors, planning and zoning,
-  Commissioner of the Revenue, elections, Sheriff
-- [Loudoun County Public Schools](https://www.lcps.org) — School Board and division policy
-- [Loudoun Water](https://www.loudounwater.org) — water and sewer service
-- [Virginia Department of Transportation](https://www.vdot.virginia.gov) — state-maintained roads
-- [Virginia General Assembly](https://virginiageneralassembly.gov) — state law and the budget
-- [Virginia DEQ](https://www.deq.virginia.gov) and [State Corporation Commission](https://www.scc.virginia.gov) —
-  environmental permits and utility rates
-- [Virginia Department of Elections](https://www.elections.virginia.gov), [Department of Health](https://www.vdh.virginia.gov),
-  [Department of Education](https://www.doe.virginia.gov), [DMAS](https://www.dmas.virginia.gov),
-  [Department of Social Services](https://www.dss.virginia.gov)
-- [U.S. House of Representatives](https://www.house.gov/representatives/find-your-representative) and
-  [U.S. Senate](https://www.senate.gov/senators/index.htm)
-- [Social Security Administration](https://www.ssa.gov), [Medicare](https://www.medicare.gov),
-  [USCIS](https://www.uscis.gov), [Veterans Affairs](https://www.va.gov), [USPS](https://www.usps.com)
-- [WMATA / Metro](https://www.wmata.com) — regional transit
+| Locality | Official site | Status |
+|---|---|---|
+| Loudoun County | [loudoun.gov](https://www.loudoun.gov) | In VA-10 |
+| Fairfax County | [fairfaxcounty.gov](https://www.fairfaxcounty.gov) | Partly in VA-10 |
+| Prince William County | [pwcva.gov](https://www.pwcva.gov) | Partly in VA-10 |
+| Fauquier County | [fauquiercounty.gov](https://www.fauquiercounty.gov) | In VA-10 |
+| Rappahannock County | [rappahannockcountyva.gov](https://www.rappahannockcountyva.gov) | In VA-10 |
+| City of Manassas | [manassasva.gov](https://www.manassasva.gov) | In VA-10 |
+| City of Manassas Park | [manassasparkva.gov](https://www.manassasparkva.gov) | In VA-10 |
+| Arlington County | [arlingtonva.us](https://www.arlingtonva.us) | In VA-8; expansion area |
 
-The app lists offices, not individual officeholders, because names and contact details change often.
-Routing explanations are general guidance, not legal advice: an individual address may belong to a
-town, an HOA, or a special district instead.
+- District composition and the redistricting timeline:
+  [Virginia's 10th congressional district](https://en.wikipedia.org/wiki/Virginia%27s_10th_congressional_district).
+  The app also links the House
+  [Find Your Representative](https://www.house.gov/representatives/find-your-representative) lookup
+  so an exact address can be checked.
+- Google's Civic Information Representatives API was shut down in April 2025, so CivLink does not
+  pretend to look officials up live. Locality data is curated and carries a last-verified date.
+- Routing explanations for the message tool are based on each office's published responsibilities;
+  links are in `src/data/offices.js` and on the About screen.
+- Open source: [React](https://react.dev), [React Native](https://reactnative.dev),
+  [Expo](https://expo.dev),
+  [AsyncStorage](https://react-native-async-storage.github.io/async-storage/),
+  [expo-clipboard](https://docs.expo.dev/versions/latest/sdk/clipboard/),
+  [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) (MIT).
+- The CivLink logo, app icons, and favicons were supplied in `assets/branding/` and are used
+  unmodified. No third-party images, fonts, or copyrighted music are included.
 
 ---
 
 ## Privacy
 
-- Nothing is sent to a server. There is no account and no analytics.
-- Stored on the device only: the topic, the message, a reference number, and a timestamp.
-- ZIP code and name are stored only if the writer chooses to add them, and the name is never shown
-  to anyone but them.
-- Any saved message can be deleted, and the dashboard can clear everything.
+- Resident messages, poll answers, questions, and demo portal data stay on the device. There is no
+  server and no account for residents.
+- A poll answer records the poll, the chosen options, and the selected locality only — never a name,
+  account, or address. Officials see aggregates and turnout by locality, never who voted.
+- The Official Portal stores sample accounts on the device. Access requests check only the `.gov`
+  email *format*; they prove nothing about identity.
+- Any saved message can be deleted, the demo data can be reset from the portal, and the browser or
+  device storage can be cleared at any time.
 - If device storage is unavailable, the app says so and keeps working for the session.
+
+---
+
+## Honest limitations
+
+- **Prototype, not a service.** No server, no real authentication, and no real official has been
+  onboarded. All portal organizations are samples.
+- **The in-app feed is the only channel.** Push notifications and email digests are not built, and
+  no delivery, open, or read statistics are shown.
+- **Sample response counts are labeled.** Seeded polls carry a fixed sample-response block so the
+  demo has charts; the results screen says when sample numbers are included. They are not real
+  constituent data. A poll hides its results below five responses, and the CSV export is locked
+  while results are hidden.
+- **No address lookup.** The resident picks an area. CivLink cannot tell which part of Fairfax or
+  Prince William County an address is in. Arlington is outside VA-10.
+- **Not everything is deep-linked.** Localities with no verified contact or public-comment page
+  list only the official pages that were checked.
+- **The iOS web install has limits.** It needs Safari and Add to Home Screen; iOS 16.4 or later
+  would be required before any future push support could ask for permission. This prototype does
+  not send push notifications at all.
 
 ---
 
 ## AI disclosure
 
 An AI coding assistant wrote and reviewed code at the student's direction. The student chose the
-problem, the topics, and the design, tested the app on a phone and in the browser, and can explain
-how each screen works. The dated log of AI-assisted work is in [AI_USAGE.md](AI_USAGE.md).
+problem, the topics, the design, and the scope, tested the app on a phone and in a browser, and can
+explain how each screen works. The dated log of AI-assisted work is in [AI_USAGE.md](AI_USAGE.md).
 
 ---
 
-## Credits
+## Submission folder
 
-- The CivLink logo, app icons, and favicons were supplied in `assets/branding/` and are used
-  unmodified. They were not drawn or edited by an AI assistant.
-- Icons elsewhere in the interface are system emoji.
-- Open source: [React](https://react.dev), [React Native](https://reactnative.dev),
-  [Expo](https://expo.dev), [AsyncStorage](https://react-native-async-storage.github.io/async-storage/),
-  [expo-clipboard](https://docs.expo.dev/versions/latest/sdk/clipboard/).
-- No third-party images, fonts, or copyrighted assets are included.
-
----
+- [JUDGE_QUICKSTART.md](submission/JUDGE_QUICKSTART.md) — the demo path, demo accounts, reset steps
+- [DEMO_VIDEO_SCRIPT.md](submission/DEMO_VIDEO_SCRIPT.md) — a 2–3 minute script
+- [SUBMISSION_ANSWERS.md](submission/SUBMISSION_ANSWERS.md) — drafts for the written questions
+- `submission/screenshots/` — screenshots of both sides
 
 *Congressional App Challenge 2026 — VA-10. Nonpartisan; no candidate or party is endorsed.*

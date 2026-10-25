@@ -41,3 +41,30 @@ export async function saveMessages(messages) {
     return false;
   }
 }
+
+// Civic demo data: polls, announcements, questions, votes, and the sample
+// accounts, all stored on this device. A real rollout would keep this on a
+// server instead. The version suffix lets a future shape change start clean
+// rather than crash on old data.
+const CIVIC_KEY = 'civic.civicState.v1';
+
+export async function loadCivicState() {
+  try {
+    const raw = await AsyncStorage.getItem(CIVIC_KEY);
+    if (!raw) return { state: null, ok: true };
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return { state: null, ok: true };
+    return { state: parsed, ok: true };
+  } catch (error) {
+    return { state: null, ok: false };
+  }
+}
+
+export async function saveCivicState(state) {
+  try {
+    await AsyncStorage.setItem(CIVIC_KEY, JSON.stringify(state));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

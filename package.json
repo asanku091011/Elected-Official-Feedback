@@ -8,20 +8,22 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "node --experimental-default-type=module --test \"tests/*.test.mjs\"",
-    "build:web": "expo export --platform web"
+    "build:web": "expo export --platform web && node scripts/finalize-web.mjs",
+    "finalize:web": "node scripts/finalize-web.mjs"
   },
   "dependencies": {
-    "@expo/metro-runtime": "~57.0.17",
+    "@expo/metro-runtime": "~58.0.15",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "babel-preset-expo": "~57.0.0",
-    "expo": "~57.0.30",
-    "expo-clipboard": "~57.0.2",
-    "expo-status-bar": "~57.0.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-native": "0.86.3",
-    "react-native-safe-area-context": "~5.7.0",
-    "react-native-screens": "~4.26.0",
+    "babel-preset-expo": "~58.0.0",
+    "expo": "^58.0.19",
+    "expo-clipboard": "~58.0.4",
+    "expo-status-bar": "~58.0.4",
+    "qrcode-generator": "^1.4.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.0",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-screens": "~4.30.0",
     "react-native-web": "^0.21.4"
   },
   "devDependencies": {

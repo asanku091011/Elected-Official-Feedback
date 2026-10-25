@@ -1,0 +1,36 @@
+# Netlify static deploy for the CivLink web build.
+# Free tier is enough: this is a static site with no server functions.
+#
+# Set EXPO_PUBLIC_WEB_APP_URL to the final https address so phone builds show
+# the same link and QR code. The variable can also be left unset; the web app
+# then reads its own address at runtime.
+
+[build]
+  command = "npm run build:web"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Hashed bundles can be cached for a year; the shell and service worker must not
+# be, or a new deploy would keep serving the old app.
+[[headers]]
+  for = "/_expo/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "no-cache"

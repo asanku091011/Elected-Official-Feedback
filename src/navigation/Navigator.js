@@ -1,6 +1,5 @@
 // A tiny navigation stack. React Navigation would work too, but this app only
-// needs seven screens and a back button, and this way every line is easy to
-// explain.
+// needs a stack and a back button, and this way every line is easy to explain.
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { BackHandler } from 'react-native';
@@ -13,6 +12,26 @@ import SentScreen from '../screens/SentScreen';
 import OfficesScreen from '../screens/OfficesScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 import AboutScreen from '../screens/AboutScreen';
+import FeedScreen from '../screens/FeedScreen';
+import PollScreen from '../screens/PollScreen';
+import AskScreen from '../screens/AskScreen';
+import HowItWorksScreen from '../screens/HowItWorksScreen';
+import JurisdictionScreen from '../screens/JurisdictionScreen';
+import LocalGovernmentScreen from '../screens/LocalGovernmentScreen';
+import DataSourcesScreen from '../screens/DataSourcesScreen';
+import GetCivLinkScreen from '../screens/GetCivLinkScreen';
+import NotificationSettingsScreen from '../screens/NotificationSettingsScreen';
+import ContentPolicyScreen from '../screens/ContentPolicyScreen';
+import PortalSignInScreen from '../screens/PortalSignInScreen';
+import PortalHomeScreen from '../screens/PortalHomeScreen';
+import PortalPollsScreen from '../screens/PortalPollsScreen';
+import PollEditorScreen from '../screens/PollEditorScreen';
+import PollResultsScreen from '../screens/PollResultsScreen';
+import PortalAnnouncementsScreen from '../screens/PortalAnnouncementsScreen';
+import AnnouncementEditorScreen from '../screens/AnnouncementEditorScreen';
+import PortalQuestionsScreen from '../screens/PortalQuestionsScreen';
+import PortalAdminScreen from '../screens/PortalAdminScreen';
+import AuditLogScreen from '../screens/AuditLogScreen';
 
 const SCREENS = {
   Home: HomeScreen,
@@ -24,6 +43,26 @@ const SCREENS = {
   Offices: OfficesScreen,
   Dashboard: DashboardScreen,
   About: AboutScreen,
+  Feed: FeedScreen,
+  Poll: PollScreen,
+  Ask: AskScreen,
+  HowItWorks: HowItWorksScreen,
+  Jurisdiction: JurisdictionScreen,
+  LocalGovernment: LocalGovernmentScreen,
+  DataSources: DataSourcesScreen,
+  GetCivLink: GetCivLinkScreen,
+  NotificationSettings: NotificationSettingsScreen,
+  ContentPolicy: ContentPolicyScreen,
+  PortalSignIn: PortalSignInScreen,
+  PortalHome: PortalHomeScreen,
+  PortalPolls: PortalPollsScreen,
+  PollEditor: PollEditorScreen,
+  PollResults: PollResultsScreen,
+  PortalAnnouncements: PortalAnnouncementsScreen,
+  AnnouncementEditor: AnnouncementEditorScreen,
+  PortalQuestions: PortalQuestionsScreen,
+  PortalAdmin: PortalAdminScreen,
+  AuditLog: AuditLogScreen,
 };
 
 const NavContext = createContext(null);
