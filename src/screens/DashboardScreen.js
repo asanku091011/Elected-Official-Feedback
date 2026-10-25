@@ -11,6 +11,7 @@ import EmptyState from '../components/EmptyState';
 import LevelBadge from '../components/LevelBadge';
 import { summarize } from '../lib/aggregate';
 import { getTopic } from '../data/topics';
+import { getJurisdiction } from '../data/jurisdictions';
 import { levelTint, colors, spacing, radius, font, text } from '../theme';
 import { formatRelative } from '../lib/format';
 
@@ -109,9 +110,10 @@ export default function DashboardScreen() {
             ))}
           </Card>
 
-          <Text style={styles.sectionTitle}>Recent messages</Text>
+          <Text style={styles.sectionTitle}>My issues</Text>
           {messages.map((item) => {
             const topic = getTopic(item.topicId);
+            const area = item.areaId ? getJurisdiction(item.areaId) : null;
             const isOpen = Boolean(expanded[item.id]);
             return (
               <View key={item.id} style={styles.messageCard}>
@@ -123,6 +125,9 @@ export default function DashboardScreen() {
                 </View>
                 <Text style={styles.messageMeta}>
                   {formatRelative(item.createdAt)}
+                  {area ? `  ·  ${area.name}` : ''}
+                  {item.recipientName ? `  ·  To ${item.recipientName}` : ''}
+                  {item.status ? `  ·  ${item.status}` : ''}
                   {item.zip ? `  ·  ZIP ${item.zip}` : ''}
                   {item.authorName ? `  ·  ${item.authorName}` : '  ·  Anonymous'}
                 </Text>
@@ -144,8 +149,9 @@ export default function DashboardScreen() {
           })}
 
           <Text style={styles.footnote}>
-            Messages appear here exactly as they were saved. A name is shown only if the writer chose
-            to include one.
+            Issues appear here exactly as they were saved. “Sent” means the issue was delivered to
+            the chosen sample recipient in this demo — no real office received it. A name is shown
+            only if the writer chose to include one.
           </Text>
 
           <Button

@@ -4,6 +4,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { getTopic } from '../data/topics';
+import { getRecipient } from '../data/recipients';
 import { makeReference } from '../lib/format';
 import { loadMessages, saveMessages } from '../lib/storage';
 
@@ -11,6 +12,8 @@ const AppContext = createContext(null);
 
 const EMPTY_DRAFT = {
   topicId: null,
+  recipientId: null,
+  consended: false,
   message: '',
   zip: '',
   includeName: false,
@@ -51,30 +54,45 @@ export function AppProvider({ children }) {
   }, []);
 
   // Adds a message, saves the new list, and returns the saved record plus
-  // whether it reached device storage.
-  const addMessage = useCallback(async ({ topicId, message, zip, includeName, name }) => {
-    const topic = getTopic(topicId);
-    const now = new Date().toISOString();
-    const record = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      reference: makeReference(messagesRef.current.map((item) => item.reference)),
-      topicId,
-      level: topic ? topic.level : 'local',
-      officeId: topic ? topic.officeId : null,
-      message: message.trim(),
-      zip: zip.trim(),
-      authorName: includeName ? name.trim() : '',
-      createdAt: now,
-    };
+  // whether it reached device storage. The recipient must be an ID from the
+  // fixed sample list in data/recipients.js — a free-typed address is
+  // rejected here, the same way a server would reject it.
+  const addMessage = useCallback(
+    async ({ topicId, recipientId, message, zip, includeName, name, jurisdictionId }) => {
+      const topic = getTopic(topicId);
+      const recipient = getRecipient(recipientId);
+      if (!topic) return { ok: false, error: 'That issue is not available.' };
+      if (!recipient) {
+        return { ok: false, error: 'That recipient is not on the CivLink list, so nothing was sent.' };
+      }
+      const now = new Date().toISOString();
+      const record = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        reference: makeReference(messagesRef.current.map((item) => item.reference)),
+        topicId,
+        level: topic.level,
+        officeId: topic.officeId,
+        areaId: jurisdictionId || null,
+        recipientId: recipient.id,
+        recipientName: recipient.name,
+        recipientEmail: recipient.email,
+        status: 'Sent',
+        message: message.trim(),
+        zip: zip.trim(),
+        authorName: includeName ? name.trim() : '',
+        createdAt: now,
+      };
 
-    const next = [record, ...messagesRef.current];
-    messagesRef.current = next;
-    setMessages(next);
+      const next = [record, ...messagesRef.current];
+      messagesRef.current = next;
+      setMessages(next);
 
-    const saved = await saveMessages(next);
-    setStorageOk(saved);
-    return { record, saved };
-  }, []);
+      const saved = await saveMessages(next);
+      setStorageOk(saved);
+      return { ok: true, record, saved };
+    },
+    []
+  );
 
   const deleteMessage = useCallback(async (id) => {
     const next = messagesRef.current.filter((item) => item.id !== id);

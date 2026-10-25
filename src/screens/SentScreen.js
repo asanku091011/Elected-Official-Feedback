@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Linking } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { useNav } from '../navigation/Navigator';
 import { useApp } from '../context/AppContext';
@@ -9,14 +9,16 @@ import Notice from '../components/Notice';
 import ExternalLink from '../components/ExternalLink';
 import EmptyState from '../components/EmptyState';
 import LevelBadge from '../components/LevelBadge';
+import Badge from '../components/Badge';
 import { getTopic } from '../data/topics';
 import { getOffice } from '../data/offices';
+import { getJurisdiction } from '../data/jurisdictions';
 import { formatDate, formatTime } from '../lib/format';
 import { colors, spacing, radius, font, text } from '../theme';
 
 const NEXT_STEPS = [
-  'Open the office’s official page and find their contact form or email address.',
-  'Paste your message and send it. Add your ZIP code if they ask for one.',
+  'In this demo, no real email is delivered. The preview above shows exactly what a live rollout would send.',
+  'In a live rollout, CivLink would deliver the email to the office’s inbox from CivLink, on your behalf.',
   'Keep your reference number. If you do not hear back in a few weeks, follow up and mention it.',
 ];
 
@@ -26,9 +28,21 @@ export default function SentScreen({ record, saved }) {
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [mailFailed, setMailFailed] = useState(false);
 
   const topic = record ? getTopic(record.topicId) : null;
   const office = record ? getOffice(record.officeId) : null;
+  const area = record && record.areaId ? getJurisdiction(record.areaId) : null;
+  const areaName = area ? area.name : 'Unknown area';
+  // Routed issues carry the recipient the resident consented to. Older saved
+  // messages do not, so they keep their original “send it yourself” layout.
+  const hasRecipient = Boolean(record && record.recipientEmail && record.recipientName);
+  const emailSubject = topic
+    ? `CivLink issue #${record.reference}: ${topic.title} (${areaName})`
+    : `CivLink issue #${record ? record.reference : ''}`;
+  const mailtoUrl = hasRecipient
+    ? `mailto:${record.recipientEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(record.message)}`
+    : '';
 
   if (!record || !topic) {
     return (
@@ -64,9 +78,17 @@ export default function SentScreen({ record, saved }) {
     nav.reset('Home');
   };
 
+  const handleOpenEmailApp = () => {
+    setMailFailed(false);
+    Linking.openURL(mailtoUrl).catch(() => {
+      setMailFailed(true);
+      setCopied(false);
+    });
+  };
+
   return (
     <Screen
-      title="Saved on this device"
+      title={hasRecipient ? 'Issue sent (demo)' : 'Saved on this device'}
       onBack={() => nav.reset('Home')}
       footer={
         <View>
@@ -84,7 +106,9 @@ export default function SentScreen({ record, saved }) {
         <View style={styles.checkCircle}>
           <Text style={styles.checkMark}>✓</Text>
         </View>
-        <Text style={styles.successTitle}>Your message is saved</Text>
+        <Text style={styles.successTitle}>
+          {hasRecipient ? 'Your issue has been sent' : 'Your message is saved'}
+        </Text>
         <Text style={styles.refLabel}>Reference number</Text>
         <Text style={styles.refValue} accessibilityLabel={`Reference number ${record.reference}`}>
           {record.reference}
@@ -92,6 +116,11 @@ export default function SentScreen({ record, saved }) {
         <Text style={styles.timestamp}>
           {formatDate(record.createdAt)} at {formatTime(record.createdAt)}
         </Text>
+        <Badge
+          label={record.status || 'Saved (older version)'}
+          tone={record.status === 'Sent' ? 'success' : 'neutral'}
+          style={styles.statusBadge}
+        />
       </View>
 
       {saved === false ? (
@@ -106,26 +135,69 @@ export default function SentScreen({ record, saved }) {
           <Text style={styles.metaTopic}>
             {topic.icon}  {topic.title}
           </Text>
-          <Text style={styles.metaOffice}>{office ? office.name : 'Office'}</Text>
+          {hasRecipient ? (
+            <Text style={styles.metaRecipient}>To: {record.recipientName}</Text>
+          ) : null}
+          <Text style={styles.metaOffice}>
+            {hasRecipient ? `${areaName}  ·  ` : ''}
+            {office ? office.name : 'Office'}
+          </Text>
         </View>
         <LevelBadge level={topic.level} />
       </View>
 
-      <Text style={styles.sectionTitle}>Send it to the office</Text>
-      <Text style={styles.body}>
-        CivLink does not send your message for you. Taking this last step is what puts your concern
-        in an official record.
-      </Text>
-
-      {office ? (
-        <ExternalLink
-          url={office.url}
-          label={`Open ${office.urlLabel}`}
-          variant="primary"
-          hint="Opens the office's official website in your browser"
-          style={styles.primaryLink}
-        />
-      ) : null}
+      {hasRecipient ? (
+        <>
+          <Text style={styles.sectionTitle}>Email preview</Text>
+          <Text style={styles.demoNote}>
+            Demo mode: preview only, no real email delivered.
+          </Text>
+          <View style={styles.emailCard}>
+            <Text style={styles.emailLabel}>To</Text>
+            <Text style={styles.emailValue}>{record.recipientEmail} (sample inbox)</Text>
+            <Text style={styles.emailLabel}>From</Text>
+            <Text style={styles.emailValue}>CivLink on behalf of a resident</Text>
+            <Text style={styles.emailLabel}>Subject</Text>
+            <Text style={styles.emailValue}>{emailSubject}</Text>
+            <Text style={styles.emailLabel}>Body</Text>
+            <Text style={styles.emailBody}>{record.message}</Text>
+          </View>
+          <Button
+            label="Open in my email app (optional)"
+            variant="secondary"
+            onPress={handleOpenEmailApp}
+            style={styles.copyBtn}
+            disabled={!mailtoUrl}
+            accessibilityHint="Opens your own email app with a message to the sample inbox. Nothing is delivered by CivLink."
+          />
+          {mailFailed ? (
+            <Text style={styles.copyError} accessibilityLiveRegion="polite">
+              Your email app could not be opened. Copy the message below and send it yourself if
+              you want to.
+            </Text>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <Text style={styles.sectionTitle}>Send it to the office</Text>
+          <Text style={styles.body}>
+            CivLink does not send your message for you. Taking this last step is what puts your
+            concern in an official record.
+          </Text>
+          {office ? (
+            <ExternalLink
+              url={office.url}
+              label={`Open ${office.urlLabel}`}
+              variant="primary"
+              hint="Opens the office's official website in your browser"
+              style={styles.primaryLink}
+            />
+          ) : null}
+          <View style={styles.messageCard}>
+            <Text style={styles.messageText}>{record.message}</Text>
+          </View>
+        </>
+      )}
 
       <Button
         label={copied ? 'Copied ✓' : 'Copy my message'}
@@ -138,10 +210,6 @@ export default function SentScreen({ record, saved }) {
           Could not copy automatically. Select the text below and copy it manually.
         </Text>
       ) : null}
-
-      <View style={styles.messageCard}>
-        <Text style={styles.messageText}>{record.message}</Text>
-      </View>
 
       <Text style={styles.sectionTitle}>What happens next</Text>
       {NEXT_STEPS.map((step, index) => (
@@ -249,6 +317,51 @@ const styles = StyleSheet.create({
     fontFamily: font.family,
     fontSize: font.size.sm,
     color: colors.slateText,
+  },
+  metaRecipient: {
+    fontFamily: font.family,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+    color: colors.ink,
+    marginBottom: 2,
+  },
+  statusBadge: {
+    marginTop: spacing.sm,
+  },
+  demoNote: {
+    ...text.small,
+    color: colors.tealDeep,
+    fontWeight: font.weight.medium,
+    marginBottom: spacing.sm,
+  },
+  emailCard: {
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.teal,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+  },
+  emailLabel: {
+    fontFamily: font.family,
+    fontSize: font.size.xs,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.slateText,
+    marginBottom: 2,
+  },
+  emailValue: {
+    fontFamily: font.family,
+    fontSize: font.size.sm,
+    color: colors.ink,
+    marginBottom: spacing.sm,
+  },
+  emailBody: {
+    ...text.body,
+    color: colors.ink,
+    marginBottom: 0,
   },
   sectionTitle: {
     fontFamily: font.family,

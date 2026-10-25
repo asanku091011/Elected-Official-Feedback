@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNav } from '../navigation/Navigator';
 import { useApp } from '../context/AppContext';
+import { useCivic } from '../context/CivicContext';
 import Screen from '../components/Screen';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -9,18 +10,37 @@ import Notice from '../components/Notice';
 import LevelBadge from '../components/LevelBadge';
 import EmptyState from '../components/EmptyState';
 import { getTopic } from '../data/topics';
-import { getOffice } from '../data/offices';
+import { getRecipient } from '../data/recipients';
 import { reviewDraft } from '../lib/validate';
 import { colors, spacing, radius, font, text } from '../theme';
+
+const PHASE_LABELS = {
+  preparing: 'Preparing your issue…',
+  routing: 'Routing your issue…',
+  sent: 'Email sent ✓',
+};
 
 export default function PreviewScreen() {
   const nav = useNav();
   const { draft, addMessage, resetDraft } = useApp();
+  const { jurisdictionId } = useCivic();
   const [saving, setSaving] = useState(false);
+  const [phase, setPhase] = useState('idle');
+  const [sendError, setSendError] = useState('');
+  const timersRef = useRef([]);
 
   const topic = getTopic(draft.topicId);
-  const office = topic ? getOffice(topic.officeId) : null;
   const review = reviewDraft(draft);
+  // Resolved by ID only. A draft value that is not on the fixed list is
+  // blocked here and can never reach the send step.
+  const recipient = draft.recipientId ? getRecipient(draft.recipientId) : null;
+
+  useEffect(
+    () => () => {
+      timersRef.current.forEach((timer) => clearTimeout(timer));
+    },
+    []
+  );
 
   if (!topic) {
     return (
@@ -36,36 +56,107 @@ export default function PreviewScreen() {
     );
   }
 
-  const handleSave = async () => {
-    if (saving) return;
+  if (!recipient) {
+    return (
+      <Screen title="Check it once more" onBack={nav.pop}>
+        <Notice tone="danger" title="This recipient is not on the CivLink list">
+          Only recipients on the app’s fixed list can receive an issue, so nothing can be sent.
+          Go back and pick a recipient, or start the issue again.
+        </Notice>
+        <Button
+          label="Go back"
+          variant="secondary"
+          onPress={nav.pop}
+          style={styles.editBtn}
+        />
+      </Screen>
+    );
+  }
+
+  const canSend = review.isValid && draft.consended;
+
+  const sendIssue = async () => {
+    if (saving || !canSend) return;
     setSaving(true);
-    const { record, saved } = await addMessage({
-      topicId: topic.id,
-      message: draft.message,
-      zip: draft.zip,
-      includeName: draft.includeName,
-      name: draft.name,
-    });
-    resetDraft();
-    nav.replace('Sent', { record, saved });
+    setSendError('');
+    const wait = (ms) =>
+      new Promise((resolve) => {
+        const timer = setTimeout(resolve, ms);
+        timersRef.current.push(timer);
+      });
+
+    // Demo mode: mimic a real send sequence end to end, then save the issue.
+    // No app is actually emailed here.
+    setPhase('preparing');
+    await wait(700);
+    setPhase('routing');
+    await wait(800);
+    try {
+      const result = await addMessage({
+        topicId: draft.topicId,
+        recipientId: recipient.id,
+        message: draft.message,
+        zip: draft.zip,
+        includeName: draft.includeName,
+        name: draft.name,
+        jurisdictionId,
+      });
+      if (!result.ok) {
+        throw new Error(result.error || 'The issue could not be sent.');
+      }
+      setPhase('sent');
+      await wait(600);
+      resetDraft();
+      nav.replace('Sent', { record: result.record, saved: result.saved });
+    } catch (error) {
+      setPhase('idle');
+      setSaving(false);
+      setSendError(
+        'The issue could not be sent or saved right now. Nothing was lost — try again in a moment.'
+      );
+    }
   };
 
   return (
     <Screen
       title="Check it once more"
-      subtitle="This is exactly what you would send."
+      subtitle="This is exactly what would be sent."
       onBack={nav.pop}
       footer={
         <View>
           <Button
-            label={saving ? 'Saving…' : 'Save & get sending options'}
-            onPress={handleSave}
-            disabled={saving || !review.isValid}
+            label={saving ? 'Sending…' : 'Send issue to recipient'}
+            onPress={sendIssue}
+            disabled={saving || !canSend}
           />
+          {!draft.consended ? (
+            <Text style={styles.consentHint}>
+              Agree to send it to {recipient.name} on the previous screen to enable sending.
+            </Text>
+          ) : null}
           <Button label="Keep editing" variant="ghost" onPress={nav.pop} style={styles.editBtn} />
         </View>
       }
     >
+      {phase !== 'idle' ? (
+        <View style={styles.overlay} pointerEvents="auto">
+          <View style={styles.overlayCard}>
+            {phase !== 'sent' ? (
+              <ActivityIndicator color={colors.tealDeep} size="small" />
+            ) : (
+              <Text style={styles.overlayCheck}>✓</Text>
+            )}
+            <Text style={styles.overlayText}>{PHASE_LABELS[phase]}</Text>
+            {phase === 'routing' && recipient ? (
+              <Text style={styles.overlayRecipient}>to {recipient.name}</Text>
+            ) : null}
+            <Text style={styles.overlayDemoNote}>
+              Demo mode: preview only, no real email delivered.
+            </Text>
+          </View>
+        </View>
+      ) : null}
+
       <Card style={styles.metaCard}>
         <View style={styles.metaTop}>
           <Text style={styles.metaTopic}>
@@ -73,7 +164,9 @@ export default function PreviewScreen() {
           </Text>
           <LevelBadge level={topic.level} />
         </View>
-        <Text style={styles.metaOffice}>{office ? office.name : 'Office'}</Text>
+        <Text style={styles.metaRecipientTo}>
+          To: {recipient.name}
+        </Text>
         <Text style={styles.metaSmall}>
           From: {draft.includeName && draft.name.trim() ? draft.name.trim() : 'Anonymous'}
           {draft.zip.trim() ? `  ·  ZIP ${draft.zip.trim()}` : ''}
@@ -92,13 +185,20 @@ export default function PreviewScreen() {
         </Notice>
       ) : null}
 
+      {sendError ? (
+        <Notice tone="danger" title="Could not send">
+          {sendError}
+        </Notice>
+      ) : null}
+
       <View style={styles.messageCard}>
         <Text style={styles.messageText}>{draft.message.trim()}</Text>
       </View>
 
-      <Notice tone="info" title="How this gets sent">
-        Saving keeps a copy on this device and shows you the office’s official contact page. CivLink
-        does not email or deliver the message for you, so you stay in control of what you send.
+      <Notice tone="info" title="Demo mode">
+        Sending shows what a real hand-off would look like: CivLink prepares your issue, routes it
+        to the recipient you chose, and saves it on this device with a reference number under
+        “My issues”. No real email leaves this app, and this is the only status an issue ever gets.
       </Notice>
     </Screen>
   );
@@ -123,11 +223,11 @@ const styles = StyleSheet.create({
     color: colors.ink,
     marginRight: spacing.sm,
   },
-  metaOffice: {
+  metaRecipientTo: {
     fontFamily: font.family,
-    fontSize: font.size.md,
-    fontWeight: font.weight.bold,
-    color: colors.ink,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.semibold,
+    color: colors.tealDeep,
     marginBottom: 4,
   },
   metaSmall: {
@@ -150,8 +250,61 @@ const styles = StyleSheet.create({
     ...text.body,
     color: colors.ink,
   },
+  consentHint: {
+    ...text.small,
+    marginTop: -spacing.sm + 4,
+    marginBottom: spacing.sm,
+    color: colors.danger,
+  },
   editBtn: {
     marginTop: spacing.xs,
     minHeight: 40,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    zIndex: 10,
+  },
+  overlayCard: {
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderWidth: 2,
+    borderColor: colors.ink,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.xl,
+    maxWidth: 320,
+  },
+  overlayCheck: {
+    fontFamily: font.family,
+    fontSize: 28,
+    color: colors.success,
+    fontWeight: font.weight.bold,
+    marginBottom: spacing.xs,
+  },
+  overlayText: {
+    fontFamily: font.family,
+    fontSize: font.size.md,
+    fontWeight: font.weight.semibold,
+    color: colors.ink,
+  },
+  overlayRecipient: {
+    ...text.small,
+    marginTop: spacing.xs,
+    maxWidth: 240,
+    textAlign: 'center',
+  },
+  overlayDemoNote: {
+    fontFamily: font.family,
+    fontSize: font.size.xs,
+    color: colors.slateText,
+    marginTop: spacing.sm,
+    textAlign: 'center',
   },
 });

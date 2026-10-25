@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     maxWidth: 540,
   },
   ctaBlock: {
-    alignSelf: 'stretch',
+    alignSelf: 'center',
     marginTop: spacing.lg,
     maxWidth: 420,
     width: '100%',

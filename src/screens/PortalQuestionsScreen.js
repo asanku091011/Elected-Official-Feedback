@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useNav } from '../navigation/Navigator';
 import { useCivic } from '../context/CivicContext';
+import { useApp } from '../context/AppContext';
 import PortalScreen from '../components/PortalScreen';
 import Badge from '../components/Badge';
 import Button from '../components/Button';
@@ -29,6 +30,10 @@ const STATUS_LABEL = {
 export default function PortalQuestionsScreen() {
   const nav = useNav();
   const { account, questions, replyQuestion, resolveQuestion } = useCivic();
+  const { messages: savedIssues } = useApp();
+  // Issues a resident routed to a sample recipient on this device, shown
+  // read-only next to the sample questions.
+  const routedIssues = savedIssues.filter((item) => item.recipientId && item.status);
   const [drafts, setDrafts] = useState({});
   const [publicById, setPublicById] = useState({});
   const [errors, setErrors] = useState({});
@@ -116,7 +121,35 @@ export default function PortalQuestionsScreen() {
         accounts, and a privacy review.
       </Notice>
 
-      {sorted.length === 0 ? (
+      {routedIssues.length > 0 ? (
+        <>
+          <Text style={styles.routedTitle}>Routed issues</Text>
+          <Text style={styles.routedHint}>
+            Issues residents sent to a sample recipient on this device. Read-only in this
+            prototype — in a live rollout they would arrive in the office inbox by email.
+          </Text>
+          {routedIssues.map((issue) => {
+            const issueArea = getJurisdiction(issue.areaId);
+            return (
+              <View key={issue.id} style={styles.card}>
+                <View style={styles.badgeRow}>
+                  <Badge label={issue.status || 'Sent'} tone="success" />
+                  <Badge label={`Ref ${issue.reference}`} tone="teal" />
+                  {issueArea ? <Badge label={issueArea.short} tone="neutral" /> : null}
+                </View>
+                <Text style={styles.meta}>
+                  {issue.recipientName}
+                  {'  ·  '}
+                  {formatRelative(issue.createdAt)}
+                </Text>
+                <Text style={styles.question}>{issue.message}</Text>
+              </View>
+            );
+          })}
+        </>
+      ) : null}
+
+      {sorted.length === 0 && routedIssues.length === 0 ? (
         <EmptyState
           icon="💬"
           title="No questions yet"
@@ -302,5 +335,17 @@ const styles = StyleSheet.create({
   resolvedNote: {
     ...text.small,
     color: colors.success,
+  },
+  routedTitle: {
+    fontFamily: font.family,
+    fontSize: font.size.md,
+    fontWeight: font.weight.bold,
+    color: colors.ink,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
+  },
+  routedHint: {
+    ...text.small,
+    marginBottom: spacing.sm,
   },
 });

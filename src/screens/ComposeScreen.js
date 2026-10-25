@@ -10,24 +10,34 @@ import {
 } from 'react-native';
 import { useNav } from '../navigation/Navigator';
 import { useApp } from '../context/AppContext';
+import { useCivic } from '../context/CivicContext';
 import Screen from '../components/Screen';
 import Field from '../components/Field';
 import Button from '../components/Button';
+import CheckRow from '../components/CheckRow';
 import EmptyState from '../components/EmptyState';
 import Notice from '../components/Notice';
 import { getTopic, DRAFT_CHECKS, MESSAGE_TEMPLATE } from '../data/topics';
 import { getOffice } from '../data/offices';
+import { suggestRecipient, getRecipient, recipientsForArea } from '../data/recipients';
 import { reviewDraft, MAX_LENGTH } from '../lib/validate';
 import { colors, spacing, radius, font, text } from '../theme';
 
 export default function ComposeScreen() {
   const nav = useNav();
   const { draft, updateDraft, startDraft } = useApp();
+  const { jurisdictionId, jurisdiction } = useCivic();
   const [attempted, setAttempted] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const topic = getTopic(draft.topicId);
   const office = topic ? getOffice(topic.officeId) : null;
   const review = useMemo(() => reviewDraft(draft), [draft]);
+  // The suggestion comes from the category and the selected area. The resident
+  // can change it, but only to another recipient from the fixed sample list.
+  const suggestion = topic ? suggestRecipient(topic.id, jurisdictionId) : null;
+  const selected = draft.recipientId ? getRecipient(draft.recipientId) : suggestion;
+  const areaRecipients = recipientsForArea(jurisdictionId);
 
   if (!topic) {
     return (
@@ -44,10 +54,11 @@ export default function ComposeScreen() {
   }
 
   const handlePreview = () => {
-    if (!review.isValid) {
+    if (!review.isValid || !selected || !draft.consended) {
       setAttempted(true);
       return;
     }
+    setPickerOpen(false);
     nav.push('Preview');
   };
 
@@ -84,10 +95,89 @@ export default function ComposeScreen() {
         <View style={styles.routeChip}>
           <Text style={styles.routeChipIcon}>{topic.icon}</Text>
           <View style={styles.routeChipBody}>
-            <Text style={styles.routeChipLabel}>Sending to</Text>
-            <Text style={styles.routeChipName}>{office ? office.name : topic.title}</Text>
+            <Text style={styles.routeChipLabel}>Your issue in {jurisdiction.name}</Text>
+            <Text style={styles.routeChipName}>{topic.title}</Text>
           </View>
         </View>
+
+        {selected ? (
+          <>
+            <View style={[styles.routeChip, styles.recipientChip]}>
+              <Text style={styles.routeChipIcon}>✉️</Text>
+              <View style={styles.routeChipBody}>
+                <Text style={styles.routeChipLabel}>Suggested recipient</Text>
+                <Text style={styles.routeChipName}>{selected.name}</Text>
+                <Text style={styles.recipientEmail}>{selected.email}</Text>
+              </View>
+            </View>
+            <Pressable
+              onPress={() => setPickerOpen((current) => !current)}
+              accessibilityRole="button"
+              accessibilityLabel={
+                pickerOpen ? 'Close the recipient list' : 'Choose a different recipient for this issue'
+              }
+              style={styles.changeLink}
+            >
+              <Text style={styles.templateLink}>
+                {pickerOpen ? 'Hide the recipient list' : 'Change recipient'}
+              </Text>
+            </Pressable>
+
+            {pickerOpen ? (
+              <View style={styles.pickerList}>
+                <Text style={styles.pickerHint}>
+                  Recipients for {jurisdiction.name}. Only these sample inboxes can receive an issue.
+                </Text>
+                {areaRecipients.map((item) => (
+                  <Pressable
+                    key={item.id}
+                    onPress={() => {
+                      updateDraft({ recipientId: item.id, consended: draft.consended });
+                      setPickerOpen(false);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Use ${item.name} as the recipient`}
+                    style={({ pressed }) => [
+                      styles.recipientRow,
+                      item.id === selected.id && styles.recipientRowSelected,
+                      pressed && styles.pressedRow,
+                    ]}
+                  >
+                    <Text style={styles.recipientRowName} numberOfLines={1}>
+                      {item.id === selected.id ? '✓ ' : ''}
+                      {item.name}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            ) : null}
+
+            <CheckRow
+              label={`Send this issue to ${selected.name}`}
+              description="Required to send. The issue is also saved on this device under My issues."
+              checked={draft.consended}
+              onToggle={() => updateDraft({ consended: !draft.consended })}
+            />
+            {attempted && !draft.consended ? (
+              <Notice tone="danger" title="Consent needed">
+                Tick “Send this issue to {selected.name}” so CivLink knows the recipient agreed to
+                receive it from you.
+              </Notice>
+            ) : null}
+          </>
+        ) : (
+          <Notice tone="danger" title="No recipient on the list" style={styles.noticeSpacing}>
+            This area has no recipient in the list yet, so the issue cannot be sent. Try changing
+            your area from the home screen.
+          </Notice>
+        )}
+
+        {office ? (
+          <Text style={styles.officeNote}>
+            The office that actually handles this issue is {office.name} — see the previous screen
+            for its official website.
+          </Text>
+        ) : null}
 
         {attempted && !review.isValid ? (
           <Notice tone="danger" title="A few things to fix">
@@ -185,8 +275,8 @@ export default function ComposeScreen() {
         ) : null}
 
         <Text style={styles.privacyNote}>
-          Nothing is sent from this app. Your message is saved on this device, and the next screen
-          gives you the office’s official contact page so you can send it yourself.
+          Your issue is saved on this device, and — only if you tick the consent box — is sent to
+          the recipient above as a demo email. No real government office receives it in this build.
         </Text>
       </Screen>
     </KeyboardAvoidingView>
@@ -341,6 +431,55 @@ const styles = StyleSheet.create({
     color: colors.slateText,
     lineHeight: font.size.xs * 1.7,
     marginBottom: spacing.sm,
+  },
+  recipientChip: {
+    borderLeftWidth: 4,
+    borderLeftColor: colors.teal,
+  },
+  recipientEmail: {
+    fontFamily: font.family,
+    fontSize: font.size.xs,
+    color: colors.slateText,
+    marginTop: 2,
+  },
+  changeLink: {
+    alignSelf: 'flex-start',
+    marginBottom: spacing.sm,
+  },
+  pickerList: {
+    marginBottom: spacing.md,
+  },
+  pickerHint: {
+    ...text.small,
+    marginBottom: spacing.sm,
+  },
+  recipientRow: {
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: spacing.md - 2,
+    marginBottom: spacing.sm,
+  },
+  recipientRowSelected: {
+    backgroundColor: colors.tealSoft,
+    borderColor: colors.tealBorder,
+  },
+  pressedRow: {
+    backgroundColor: colors.tealSoft,
+  },
+  recipientRowName: {
+    fontFamily: font.family,
+    fontSize: font.size.sm,
+    fontWeight: font.weight.medium,
+    color: colors.ink,
+  },
+  officeNote: {
+    ...text.small,
+    marginBottom: spacing.lg,
+  },
+  noticeSpacing: {
+    marginBottom: spacing.md,
   },
   startOver: {
     alignItems: 'center',
