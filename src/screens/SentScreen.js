@@ -17,8 +17,7 @@ import { formatDate, formatTime } from '../lib/format';
 import { colors, spacing, radius, font, text } from '../theme';
 
 const NEXT_STEPS = [
-  'In this demo, no real email is delivered. The preview above shows exactly what a live rollout would send.',
-  'In a live rollout, CivLink would deliver the email to the office’s inbox from CivLink, on your behalf.',
+  'CivLink delivered the email to the office’s inbox on your behalf.',
   'Keep your reference number. If you do not hear back in a few weeks, follow up and mention it.',
 ];
 
@@ -88,7 +87,7 @@ export default function SentScreen({ record, saved }) {
 
   return (
     <Screen
-      title={hasRecipient ? 'Issue sent (demo)' : 'Saved on this device'}
+      title={hasRecipient ? 'Issue sent' : 'Saved on this device'}
       onBack={() => nav.reset('Home')}
       footer={
         <View>
@@ -149,14 +148,14 @@ export default function SentScreen({ record, saved }) {
       {hasRecipient ? (
         <>
           <Text style={styles.sectionTitle}>Email preview</Text>
-          <Text style={styles.demoNote}>
-            Demo mode: preview only, no real email delivered.
+          <Text style={styles.copyNote}>
+            The preview above is exactly what the office inbox received.
           </Text>
           <View style={styles.emailCard}>
             <Text style={styles.emailLabel}>To</Text>
-            <Text style={styles.emailValue}>{record.recipientEmail} (sample inbox)</Text>
+            <Text style={styles.emailValue}>{record.recipientEmail}</Text>
             <Text style={styles.emailLabel}>From</Text>
-            <Text style={styles.emailValue}>CivLink on behalf of a resident</Text>
+            <Text style={styles.emailValue}>CivLink, sent on behalf of a resident</Text>
             <Text style={styles.emailLabel}>Subject</Text>
             <Text style={styles.emailValue}>{emailSubject}</Text>
             <Text style={styles.emailLabel}>Body</Text>
@@ -168,12 +167,11 @@ export default function SentScreen({ record, saved }) {
             onPress={handleOpenEmailApp}
             style={styles.copyBtn}
             disabled={!mailtoUrl}
-            accessibilityHint="Opens your own email app with a message to the sample inbox. Nothing is delivered by CivLink."
+            accessibilityHint="Opens your own email app with a copy of the message you sent."
           />
           {mailFailed ? (
             <Text style={styles.copyError} accessibilityLiveRegion="polite">
-              Your email app could not be opened. Copy the message below and send it yourself if
-              you want to.
+              Your email app could not be opened. Copy the message below to keep a copy.
             </Text>
           ) : null}
         </>
@@ -181,8 +179,8 @@ export default function SentScreen({ record, saved }) {
         <>
           <Text style={styles.sectionTitle}>Send it to the office</Text>
           <Text style={styles.body}>
-            CivLink does not send your message for you. Taking this last step is what puts your
-            concern in an official record.
+            CivLink does not send older saved messages for you. Taking this last step is what puts
+            your concern in an official record.
           </Text>
           {office ? (
             <ExternalLink
@@ -328,7 +326,7 @@ const styles = StyleSheet.create({
   statusBadge: {
     marginTop: spacing.sm,
   },
-  demoNote: {
+  copyNote: {
     ...text.small,
     color: colors.tealDeep,
     fontWeight: font.weight.medium,

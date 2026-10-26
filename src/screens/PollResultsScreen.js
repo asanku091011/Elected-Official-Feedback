@@ -34,8 +34,8 @@ export default function PollResultsScreen({ pollId }) {
         <EmptyState
           icon="🔐"
           title="Sign in to see results"
-          body="Aggregate results are part of the Official Portal prototype."
-          actionLabel="Choose a demo account"
+          body="Aggregate results are part of the Official Portal."
+          actionLabel="Choose an account"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -101,7 +101,6 @@ export default function PollResultsScreen({ pollId }) {
       <View style={styles.summaryCard}>
         <View style={styles.badgeRow}>
           <Badge label={pollStatusLabel(phase)} tone={phase === 'open' ? 'success' : 'neutral'} dot />
-          {poll.isSample ? <Badge label="Sample data" tone="warning" /> : null}
         </View>
         <Text style={styles.question}>{poll.question}</Text>
         {poll.description ? <Text style={styles.description}>{poll.description}</Text> : null}
@@ -115,13 +114,6 @@ export default function PollResultsScreen({ pollId }) {
           {tally.total} {tally.total === 1 ? 'response' : 'responses'}
         </Text>
       </View>
-
-      {tally.usingSampleData ? (
-        <Notice tone="warning" title="Sample numbers are included">
-          The seeded sample responses are added to the responses recorded on this device so the
-          prototype has results to show. These are not real constituent responses.
-        </Notice>
-      ) : null}
 
       {!tally.hasEnough ? (
         <Notice tone="info" title="Not enough responses yet">

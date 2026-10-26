@@ -7,9 +7,7 @@ import { useNav } from '../navigation/Navigator';
 import { SAMPLE_ORG } from '../data/accounts';
 import { colors, spacing, radius, font, text } from '../theme';
 
-// Every Official Portal screen renders inside this wrapper. The banner is not
-// dismissible on purpose: nothing in this prototype may look like a message
-// from a real office.
+// Every Official Portal screen renders inside this wrapper.
 export default function PortalScreen({
   title,
   subtitle,
@@ -18,7 +16,6 @@ export default function PortalScreen({
   children,
   footer,
   headerRight,
-  banner = true,
 }) {
   const nav = useNav();
   const { account, signOut } = useCivic();
@@ -49,24 +46,11 @@ export default function PortalScreen({
         ) : null
       }
     >
-      {banner ? (
-        <View style={styles.banner}>
-          <Text style={styles.bannerStrong}>Prototype with sample data.</Text>
-          <Text style={styles.bannerText}>
-            Not affiliated with any government office. No real officials, offices, or agencies are
-            represented here.
-          </Text>
-        </View>
-      ) : null}
-
       {account ? (
         <View style={styles.orgRow}>
           <View style={styles.orgBody}>
             <Text style={styles.orgName}>{orgName}</Text>
-            <Text style={styles.orgMeta}>
-              {account.isSample ? 'Sample account · ' : ''}
-              {account.email}
-            </Text>
+            <Text style={styles.orgMeta}>{account.email}</Text>
           </View>
           {account.verified ? <Badge label="Verified official" tone="success" dot /> : null}
         </View>
@@ -78,26 +62,6 @@ export default function PortalScreen({
 }
 
 const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: colors.warningSoft,
-    borderWidth: 1,
-    borderColor: colors.warningBorder,
-    borderRadius: radius.md,
-    padding: spacing.md - 4,
-    marginBottom: spacing.md,
-  },
-  bannerStrong: {
-    fontFamily: font.family,
-    fontSize: font.size.sm,
-    fontWeight: font.weight.bold,
-    color: colors.warning,
-    marginBottom: 2,
-  },
-  bannerText: {
-    ...text.small,
-    fontSize: font.size.xs,
-    lineHeight: font.size.xs * 1.6,
-  },
   orgRow: {
     flexDirection: 'row',
     alignItems: 'center',

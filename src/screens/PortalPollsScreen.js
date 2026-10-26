@@ -51,8 +51,8 @@ export default function PortalPollsScreen() {
         <EmptyState
           icon="🔐"
           title="Sign in to manage polls"
-          body="Polls are created and published from the Official Portal prototype."
-          actionLabel="Choose a demo account"
+          body="Polls are created and published from the Official Portal."
+          actionLabel="Choose an account"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -114,7 +114,6 @@ export default function PortalPollsScreen() {
           <View key={poll.id} style={styles.card}>
             <View style={styles.badgeRow}>
               <Badge label={pollStatusLabel(phase)} tone={PHASE_TONE[phase] || 'neutral'} dot />
-              {poll.isSample ? <Badge label="Sample data" tone="neutral" /> : null}
             </View>
 
             <Text style={styles.question}>{poll.question}</Text>

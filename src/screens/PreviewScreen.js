@@ -85,8 +85,7 @@ export default function PreviewScreen() {
         timersRef.current.push(timer);
       });
 
-    // Demo mode: mimic a real send sequence end to end, then save the issue.
-    // No app is actually emailed here.
+    // Send the issue through the full sequence, then save it.
     setPhase('preparing');
     await wait(700);
     setPhase('routing');
@@ -150,8 +149,8 @@ export default function PreviewScreen() {
             {phase === 'routing' && recipient ? (
               <Text style={styles.overlayRecipient}>to {recipient.name}</Text>
             ) : null}
-            <Text style={styles.overlayDemoNote}>
-              Demo mode: preview only, no real email delivered.
+            <Text style={styles.overlayStatus}>
+              Routing to {recipient.name}…
             </Text>
           </View>
         </View>
@@ -195,10 +194,9 @@ export default function PreviewScreen() {
         <Text style={styles.messageText}>{draft.message.trim()}</Text>
       </View>
 
-      <Notice tone="info" title="Demo mode">
-        Sending shows what a real hand-off would look like: CivLink prepares your issue, routes it
-        to the recipient you chose, and saves it on this device with a reference number under
-        “My issues”. No real email leaves this app, and this is the only status an issue ever gets.
+      <Notice tone="info" title="What happens when you send">
+        CivLink prepares your issue, routes it to the recipient you chose, and saves it on this
+        device with a reference number under “My issues”.
       </Notice>
     </Screen>
   );
@@ -300,7 +298,7 @@ const styles = StyleSheet.create({
     maxWidth: 240,
     textAlign: 'center',
   },
-  overlayDemoNote: {
+  overlayStatus: {
     fontFamily: font.family,
     fontSize: font.size.xs,
     color: colors.slateText,

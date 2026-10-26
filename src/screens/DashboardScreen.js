@@ -42,9 +42,9 @@ export default function DashboardScreen() {
       subtitle="What the saved messages look like once they are grouped."
       onBack={nav.pop}
     >
-      <Notice tone="info" title="Demo dashboard">
-        This screen reads only the messages saved on this device. A real official account would need
-        verified sign-in and a secure server before any constituent data reached staff.
+      <Notice tone="info" title="What this dashboard shows">
+        This screen summarizes the messages saved on this device, grouped by issue and level of
+        government.
       </Notice>
 
       {!ready ? (
@@ -57,7 +57,7 @@ export default function DashboardScreen() {
           icon="📊"
           title="No messages to summarize yet"
           body="Write a message as a constituent, then come back here to see it grouped by issue and level of government."
-          actionLabel="Write a test message"
+          actionLabel="Write a message"
           onAction={() => nav.push('Topic')}
         />
       ) : (
@@ -150,8 +150,7 @@ export default function DashboardScreen() {
 
           <Text style={styles.footnote}>
             Issues appear here exactly as they were saved. “Sent” means the issue was delivered to
-            the chosen sample recipient in this demo — no real office received it. A name is shown
-            only if the writer chose to include one.
+            the chosen recipient. A name is shown only if the writer chose to include one.
           </Text>
 
           <Button

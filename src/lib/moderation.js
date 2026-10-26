@@ -1,7 +1,7 @@
 // Simple, explainable safeguards for resident content. These are word lists and
-// counters, not AI moderation, and the app says so on its content policy screen.
+// counters.
 
-// Short, deliberately mild list: enough to catch obvious abuse in a prototype
+// Short, deliberately mild list: enough to catch the most obvious abuse
 // without pretending to be a real moderation system.
 const BLOCKED_WORDS = ['damn', 'hell', 'crap', 'idiot', 'stupid', 'shut up', 'hate you'];
 
@@ -23,7 +23,7 @@ export function containsThreats(text) {
   return patterns.some((pattern) => pattern.test(String(text || '')));
 }
 
-// Counts recent actions inside a rolling window. Used so one demo device cannot
+// Counts recent actions inside a rolling window. Used so one device cannot
 // post twenty questions in a row, mirroring the rate limit a real service would
 // enforce on the server.
 export function rateLimitOk(events = [], limit = 3, windowMs = 10 * 60 * 1000, now = Date.now()) {

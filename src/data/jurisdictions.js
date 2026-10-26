@@ -3,43 +3,15 @@
 // Every URL below was checked against the locality's own official site on
 // 2026-10-23 and is linked, never copied. CivLink does not scrape local
 // government pages and does not name sitting elected officials.
-//
-// The district flags come from the current congressional map. Virginia's
-// redistricting amendment was struck down in May 2026, so the new map is not
-// in effect:
-//   - all of Loudoun, Fauquier and Rappahannock counties are in VA-10
-//   - the cities of Manassas and Manassas Park are in VA-10
-//   - only PARTS of Fairfax and Prince William counties are in VA-10
-//   - Arlington County is in VA-8, not VA-10
-
-export const VA10_LABELS = {
-  full: 'In VA-10',
-  partial: 'Part of this county is in VA-10',
-  no: 'Outside VA-10 (VA-8). Supported as an expansion area.',
-};
-
-export const DISTRICT_INFO = {
-  name: 'Virginia’s 10th Congressional District',
-  shortName: 'VA-10',
-  pilotNote:
-    'CivLink’s pilot district is Virginia’s 10th. The same system also supports neighboring Northern Virginia localities, starting with Fairfax and Arlington.',
-  boundaryNote:
-    'Virginia voters approved a redistricting amendment in April 2026, but the Supreme Court of Virginia struck it down in May 2026 and the U.S. Supreme Court declined an emergency appeal, so the current map still applies. Only parts of Fairfax and Prince William counties are in VA-10; Arlington is in VA-8.',
-  lastVerified: '2026-10-23',
-  sourceUrl: 'https://en.wikipedia.org/wiki/Virginia%27s_10th_congressional_district',
-  lookupUrl: 'https://www.house.gov/representatives/find-your-representative',
-};
-
 const LOUDOUN = {
   id: 'loudoun',
   name: 'Loudoun County',
   short: 'Loudoun',
   type: 'county',
-  inVA10: 'full',
   officialSiteUrl: 'https://www.loudoun.gov',
   sourceUrl: 'https://www.loudoun.gov/bos',
   lastVerified: '2026-10-23',
-  note: 'All of Loudoun County is in VA-10. The county government handles land use, local roads, police, parks, and county services.',
+  note: 'The county government handles land use, local roads, police, parks, and county services.',
   links: [
     {
       kind: 'board',
@@ -79,11 +51,10 @@ const FAIRFAX = {
   name: 'Fairfax County',
   short: 'Fairfax',
   type: 'county',
-  inVA10: 'partial',
   officialSiteUrl: 'https://www.fairfaxcounty.gov',
   sourceUrl: 'https://www.fairfaxcounty.gov/boardofsupervisors/',
   lastVerified: '2026-10-23',
-  note: 'Only parts of Fairfax County are in VA-10 — the current map includes areas such as Braddock, Bull Run, Clifton, Fairfax Station and Union Mill, but it splits the county. A county name alone cannot tell CivLink whether an address is inside VA-10.',
+  note: 'The county spans several communities — Braddock, Bull Run, Clifton, Fairfax Station, and Union Mill, among others — and its government runs countywide services. CivLink always uses the county you pick rather than guessing from a street address.',
   links: [
     {
       kind: 'board',
@@ -111,11 +82,10 @@ const PRINCE_WILLIAM = {
   name: 'Prince William County',
   short: 'Prince William',
   type: 'county',
-  inVA10: 'partial',
   officialSiteUrl: 'https://www.pwcva.gov',
   sourceUrl: 'https://www.pwcva.gov/department/board-county-supervisors',
   lastVerified: '2026-10-23',
-  note: 'Only parts of Prince William County are in VA-10; the current map divides the county. CivLink cannot tell from a county name alone whether an address is inside the district.',
+  note: 'The county spans several communities, and its government runs countywide services. CivLink always uses the county you pick rather than guessing from a street address.',
   links: [
     {
       kind: 'board',
@@ -143,11 +113,10 @@ const FAUQUIER = {
   name: 'Fauquier County',
   short: 'Fauquier',
   type: 'county',
-  inVA10: 'full',
   officialSiteUrl: 'https://www.fauquiercounty.gov',
   sourceUrl: 'https://www.fauquiercounty.gov/government/board-of-supervisors',
   lastVerified: '2026-10-23',
-  note: 'All of Fauquier County is in VA-10. The county handles local land use, roads, parks, and county services.',
+  note: 'The county handles local land use, roads, parks, and county services.',
   links: [
     {
       kind: 'board',
@@ -187,11 +156,10 @@ const RAPPAHANNOCK = {
   name: 'Rappahannock County',
   short: 'Rappahannock',
   type: 'county',
-  inVA10: 'full',
   officialSiteUrl: 'https://www.rappahannockcountyva.gov',
   sourceUrl: 'https://www.rappahannockcountyva.gov/government/board_of_supervisors/index.php',
   lastVerified: '2026-10-23',
-  note: 'All of Rappahannock County is in VA-10. It is a small, rural county; the county administrator’s office is the main starting point.',
+  note: 'A small, rural county; the county administrator’s office is the main starting point.',
   links: [
     {
       kind: 'board',
@@ -219,11 +187,10 @@ const MANASSAS = {
   name: 'City of Manassas',
   short: 'Manassas',
   type: 'city',
-  inVA10: 'full',
   officialSiteUrl: 'https://www.manassasva.gov',
   sourceUrl: 'https://www.manassasva.gov/connect/city_clerk/manassas_council_meeting_center.php',
   lastVerified: '2026-10-23',
-  note: 'The City of Manassas is in VA-10. As a city, it runs its own schools, police, land use, and utilities instead of the surrounding county.',
+  note: 'As a city, it runs its own schools, police, land use, and utilities instead of the surrounding county.',
   links: [
     {
       kind: 'board',
@@ -251,11 +218,10 @@ const MANASSAS_PARK = {
   name: 'City of Manassas Park',
   short: 'Manassas Park',
   type: 'city',
-  inVA10: 'full',
   officialSiteUrl: 'https://www.manassasparkva.gov',
   sourceUrl: 'https://www.manassasparkva.gov/government/governing_body/index.php',
   lastVerified: '2026-10-23',
-  note: 'The City of Manassas Park is in VA-10. The city has its own governing body, schools, police, and services.',
+  note: 'The city has its own governing body, schools, police, and services.',
   links: [
     {
       kind: 'board',
@@ -283,11 +249,10 @@ const ARLINGTON = {
   name: 'Arlington County',
   short: 'Arlington',
   type: 'county',
-  inVA10: 'no',
   officialSiteUrl: 'https://www.arlingtonva.us',
   sourceUrl: 'https://www.arlingtonva.us/Government/County-Board',
   lastVerified: '2026-10-23',
-  note: 'Arlington County is in Virginia’s 8th District, not VA-10. CivLink lists it as an expansion area so neighboring Northern Virginia localities can use the same tools.',
+  note: 'The county government runs countywide services, and neighboring Northern Virginia localities use the same CivLink tools.',
   links: [
     {
       kind: 'board',
@@ -331,9 +296,6 @@ export function getJurisdiction(id) {
   return JURISDICTIONS.find((item) => item.id === id) || null;
 }
 
-export function labelForVA10(flag) {
-  return VA10_LABELS[flag] || VA10_LABELS.full;
-}
 
 // Localities whose residents can receive content for the selected area.
 export function jurisdictionName(id) {

@@ -42,7 +42,7 @@ export async function saveMessages(messages) {
   }
 }
 
-// Civic demo data: polls, announcements, questions, votes, and the sample
+// Civic content: polls, announcements, questions, votes, and the built-in
 // accounts, all stored on this device. A real rollout would keep this on a
 // server instead. The version suffix lets a future shape change start clean
 // rather than crash on old data.

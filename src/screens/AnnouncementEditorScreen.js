@@ -55,8 +55,8 @@ export default function AnnouncementEditorScreen({ announcementId }) {
         <EmptyState
           icon="🔐"
           title="Sign in to write an announcement"
-          body="The Official Portal uses sample demo accounts. No real office or agency is represented."
-          actionLabel="Go to demo sign-in"
+          body="Sign in with an office account to write an announcement."
+          actionLabel="Go to sign-in"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -69,7 +69,7 @@ export default function AnnouncementEditorScreen({ announcementId }) {
         <EmptyState
           icon="🗂️"
           title="That announcement is not available"
-          body="It may have been removed from the demo data."
+          body="It may have been removed or archived."
           actionLabel="Back to announcements"
           onAction={() => nav.replace('PortalAnnouncements')}
         />
@@ -250,13 +250,7 @@ export default function AnnouncementEditorScreen({ announcementId }) {
         <CheckRow
           key={item.id}
           label={item.name}
-          description={
-            item.inVA10 === 'no'
-              ? 'Outside VA-10 (VA-8). Included as an expansion area.'
-              : item.inVA10 === 'partial'
-                ? 'Only part of this county is in VA-10.'
-                : 'In VA-10.'
-          }
+          description={item.type === 'county' ? 'County' : 'Independent city'}
           checked={audience.includes(item.id)}
           onToggle={() => toggleArea(item.id)}
         />
@@ -303,7 +297,7 @@ export default function AnnouncementEditorScreen({ announcementId }) {
       <View style={styles.note}>
         <Text style={styles.noteTitle}>Before you publish</Text>
         <Text style={styles.noteBody}>
-          Check the area list and the date. This prototype has no server, so the update reaches
+          Check the area list and the date. Once published, the update reaches
           residents on this device only; a real rollout would deliver it after the same verified
           official check you see at the top of this screen.
         </Text>

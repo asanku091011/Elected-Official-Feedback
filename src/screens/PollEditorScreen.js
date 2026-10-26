@@ -9,7 +9,7 @@ import Notice from '../components/Notice';
 import CheckRow from '../components/CheckRow';
 import EmptyState from '../components/EmptyState';
 import { POLL_TYPES } from '../data/seedContent';
-import { JURISDICTIONS, labelForVA10 } from '../data/jurisdictions';
+import { JURISDICTIONS } from '../data/jurisdictions';
 import {
   MAX_OPTIONS,
   MAX_QUESTION_LENGTH,
@@ -86,8 +86,8 @@ export default function PollEditorScreen({ pollId }) {
         <EmptyState
           icon="🔐"
           title="Sign in to write a poll"
-          body="Only a verified official account can create or publish polls in this prototype."
-          actionLabel="Choose a demo account"
+          body="Only a verified official account can create or publish polls."
+          actionLabel="Choose an account"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -327,7 +327,6 @@ export default function PollEditorScreen({ pollId }) {
         <CheckRow
           key={item.id}
           label={item.name}
-          description={labelForVA10(item.inVA10)}
           checked={draft.audience.includes(item.id)}
           onToggle={() => toggleAudience(item.id)}
         />

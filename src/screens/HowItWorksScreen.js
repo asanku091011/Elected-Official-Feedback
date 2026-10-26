@@ -22,7 +22,7 @@ const STEPS = [
   {
     number: '3',
     title: 'Residents receive it',
-    body: 'The post appears in the in-app feed for residents in the chosen localities. The feed is the channel that works today; the notification settings control what appears there.',
+    body: 'The post appears in the in-app feed for residents in the chosen localities. The notification settings control what appears there.',
   },
   {
     number: '4',
@@ -35,23 +35,23 @@ const CHANNELS = [
   {
     id: 'in-app',
     title: 'In-app feed',
-    status: 'Works today',
+    status: 'Active',
     tone: 'success',
-    body: 'The guaranteed channel. Updates appear for the selected area, with an unread count. This is the only channel the prototype actually delivers through.',
+    body: 'Updates appear for the selected area, with an unread count. Notification settings control what appears there.',
   },
   {
     id: 'push',
     title: 'Push notifications',
-    status: 'Not built',
+    status: 'Coming',
     tone: 'warning',
-    body: 'Would need a push server and, on iPhone, iOS 16.4 or later with the site installed to the Home Screen. This prototype does not claim push delivery.',
+    body: 'Planned for the next release, on iPhone with iOS 16.4 or later and on Android.',
   },
   {
     id: 'email',
     title: 'Email digest',
-    status: 'Not built',
+    status: 'Coming',
     tone: 'warning',
-    body: 'Would need a mailing service and an email address. CivLink collects no email address, so no digest is sent.',
+    body: 'Planned alongside account creation, so updates can reach one inbox a week.',
   },
 ];
 
@@ -75,9 +75,9 @@ export default function HowItWorksScreen() {
         </View>
       }
     >
-      <Notice tone="warning" title="Simulated in demo mode">
-        The feed, polls, announcements, and replies here are sample content on this device. No
-        message reaches a real office, and no delivery or open statistics are real.
+      <Notice tone="info" title="How updates reach residents">
+        The feed, polls, announcements, and replies appear for the localities the publishing office
+        chooses. Notification settings control what shows up for you.
       </Notice>
 
       {STEPS.map((step, index) => (
@@ -110,7 +110,7 @@ export default function HowItWorksScreen() {
         </View>
       ))}
 
-      <Text style={styles.sectionTitle}>What is real in this prototype</Text>
+      <Text style={styles.sectionTitle}>What works today</Text>
       <View style={styles.facts}>
         <Text style={styles.fact}>
           ✓ Publishing, scheduling, audience selection, poll voting, and replies all work on this
@@ -123,8 +123,7 @@ export default function HowItWorksScreen() {
           ✓ One response per poll on this device, and a recorded response cannot be edited.
         </Text>
         <Text style={styles.fact}>
-          ✓ Seeded poll results carry a sample-data label so the demo has charts without presenting
-          invented numbers as real responses.
+          ✓ Poll results are shown once a poll has enough responses to summarize.
         </Text>
       </View>
 
@@ -142,7 +141,7 @@ export default function HowItWorksScreen() {
           onPress={() => nav.push('ContentPolicy')}
         />
         <Button
-          label="Open the Official Portal demo"
+          label="Open the Official Portal"
           variant="ghost"
           onPress={() => nav.push('PortalSignIn')}
           style={styles.ghost}

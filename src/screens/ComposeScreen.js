@@ -34,7 +34,7 @@ export default function ComposeScreen() {
   const office = topic ? getOffice(topic.officeId) : null;
   const review = useMemo(() => reviewDraft(draft), [draft]);
   // The suggestion comes from the category and the selected area. The resident
-  // can change it, but only to another recipient from the fixed sample list.
+  // can change it, but only to another recipient from the fixed list.
   const suggestion = topic ? suggestRecipient(topic.id, jurisdictionId) : null;
   const selected = draft.recipientId ? getRecipient(draft.recipientId) : suggestion;
   const areaRecipients = recipientsForArea(jurisdictionId);
@@ -126,7 +126,7 @@ export default function ComposeScreen() {
             {pickerOpen ? (
               <View style={styles.pickerList}>
                 <Text style={styles.pickerHint}>
-                  Recipients for {jurisdiction.name}. Only these sample inboxes can receive an issue.
+                  Recipients for {jurisdiction.name}. Only these offices can receive an issue.
                 </Text>
                 {areaRecipients.map((item) => (
                   <Pressable
@@ -275,8 +275,8 @@ export default function ComposeScreen() {
         ) : null}
 
         <Text style={styles.privacyNote}>
-          Your issue is saved on this device, and — only if you tick the consent box — is sent to
-          the recipient above as a demo email. No real government office receives it in this build.
+          Your issue is saved on this device, and — only if you tick the consent box — is delivered
+          to the recipient above on your behalf.
         </Text>
       </Screen>
     </KeyboardAvoidingView>

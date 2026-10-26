@@ -3,19 +3,15 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useNav } from '../navigation/Navigator';
 import Screen from '../components/Screen';
 import Card from '../components/Card';
-import Badge from '../components/Badge';
 import Button from '../components/Button';
 import ExternalLink from '../components/ExternalLink';
 import Notice from '../components/Notice';
 import {
   JURISDICTIONS,
-  DISTRICT_INFO,
-  labelForVA10,
+  FEDERAL_INFO,
 } from '../data/jurisdictions';
 import { formatDate } from '../lib/format';
 import { colors, spacing, radius, font, text } from '../theme';
-
-const TONE = { full: 'success', partial: 'warning', no: 'neutral' };
 
 export default function DataSourcesScreen() {
   const nav = useNav();
@@ -45,13 +41,6 @@ export default function DataSourcesScreen() {
           <View style={styles.cardTop}>
             <Text style={styles.name}>{item.name}</Text>
           </View>
-          <View style={styles.badgeRow}>
-            <Badge
-              label={labelForVA10(item.inVA10)}
-              tone={TONE[item.inVA10] || 'neutral'}
-              style={styles.badge}
-            />
-          </View>
           <Text style={styles.meta}>
             {item.type === 'county' ? 'County' : 'City'} · last verified{' '}
             {formatDate(`${item.lastVerified}T12:00:00`)}
@@ -79,45 +68,31 @@ export default function DataSourcesScreen() {
         </Card>
       ))}
 
-      <Text style={styles.sectionTitle}>District boundaries</Text>
+      <Text style={styles.sectionTitle}>Federal and state representatives</Text>
       <Card style={styles.card}>
-        <Text style={styles.name}>{DISTRICT_INFO.name}</Text>
+        <Text style={styles.name}>{FEDERAL_INFO.name}</Text>
         <Text style={styles.body}>
-          CivLink’s pilot district is Virginia’s 10th. The current map still applies: Virginia voters
-          approved a redistricting amendment in April 2026, the Supreme Court of Virginia struck it
-          down in May 2026, and the U.S. Supreme Court declined an emergency appeal. Arlington
-          County is in Virginia’s 8th District, and only parts of Fairfax and Prince William counties
-          are in VA-10.
-        </Text>
-        <Text style={styles.meta}>
-          Last verified {formatDate(`${DISTRICT_INFO.lastVerified}T12:00:00`)}
+          Because some localities span more than one state and federal district, CivLink always uses
+          the locality you pick instead of guessing a district from an address. To find your exact
+          representative, use the official lookups below with your street address.
         </Text>
         <ExternalLink
-          url={DISTRICT_INFO.sourceUrl}
-          label="District composition source"
-          variant="secondary"
-          hint="Opens the source page used for district boundaries"
-          style={styles.link}
-        />
-        <ExternalLink
-          url={DISTRICT_INFO.lookupUrl}
+          url={FEDERAL_INFO.lookupUrl}
           label="Find your representative on house.gov"
           variant="secondary"
           hint="Opens the official House lookup; use an exact street address"
           style={styles.link}
         />
         <Text style={styles.smallNote}>
-          Use the House lookup with an exact address before relying on a district label, especially
-          in Fairfax or Prince William County.
+          State and federal district boundaries are set by law and change only through redistricting.
         </Text>
       </Card>
 
-      <Text style={styles.sectionTitle}>Why there is no live lookup</Text>
+      <Text style={styles.sectionTitle}>Locality data</Text>
       <Text style={styles.body}>
-        Google’s Civic Information Representatives API was shut down in April 2025, so CivLink does
-        not claim to look up your officials live. Its replacement returns district identifiers
-        rather than a list of offices, and would still need a server-side key. CivLink collects no
-        address and no location; it uses the area you pick and says when each fact was last checked.
+        CivLink ships locally stored locality data with a last-verified date. Every official link was
+        checked against that locality’s own website on the date shown. CivLink collects no address
+        and no location; it uses the area you pick.
       </Text>
 
       <Text style={styles.sectionTitle}>Source notes</Text>
@@ -126,11 +101,8 @@ export default function DataSourcesScreen() {
           • Locality pages: the official county or city website for each entry above.
         </Text>
         <Text style={styles.listItem}>
-          • District composition: the source linked in the District boundaries card.
-        </Text>
-        <Text style={styles.listItem}>
-          • Polls and announcements in the update feed are sample content created for this
-          prototype, not statements from any office.
+          • Announcements and polls in the update feed come from the CivLink communications office
+          for the chosen localities.
         </Text>
         <Text style={styles.listItem}>
           • Office routing explanations in the message tool were written from the published

@@ -63,8 +63,8 @@ export default function PortalAnnouncementsScreen() {
         <EmptyState
           icon="🔐"
           title="Sign in to manage announcements"
-          body="The Official Portal uses sample demo accounts. No real office or agency is represented."
-          actionLabel="Go to demo sign-in"
+          body="Sign in to write, schedule, and publish announcements for your residents."
+          actionLabel="Go to sign-in"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -142,7 +142,6 @@ export default function PortalAnnouncementsScreen() {
           <View key={item.id} style={styles.card}>
             <View style={styles.badgeRow}>
               <Badge label={statusLabel(item.status)} tone={STATUS_TONE[item.status] || 'neutral'} />
-              {item.isSample ? <Badge label="Sample data" tone="warning" /> : null}
               <Badge label={categoryLabel(item.category)} tone="teal" />
             </View>
 
@@ -192,8 +191,8 @@ export default function PortalAnnouncementsScreen() {
       )}
 
       <Text style={styles.footnote}>
-        In this prototype, announcements are stored on this device. A real rollout would deliver them
-        through a server, and only after a verified official account published them.
+        Announcements are delivered to residents of the chosen areas after an official account
+        publishes them. Archived items stay in this list for the record.
       </Text>
     </PortalScreen>
   );

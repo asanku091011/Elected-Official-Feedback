@@ -19,6 +19,9 @@ import {
 } from '../src/lib/polls.js';
 import { POLL_TYPES, SEED_ANNOUNCEMENTS, SEED_POLLS, SEED_QUESTIONS } from '../src/data/seedContent.js';
 import { getJurisdiction } from '../src/data/jurisdictions.js';
+import { SAMPLE_ACCOUNTS } from '../src/data/accounts.js';
+
+const SAMPLE_ACCOUNT_IDS = new Set(SAMPLE_ACCOUNTS.map((item) => item.id));
 
 const NOW = new Date('2026-10-23T18:00:00.000Z').getTime();
 
@@ -139,16 +142,21 @@ test('date inputs round-trip without drifting a day', () => {
   assert.equal(new Date(fromDateInput('2026-11-02', true)).getHours(), 23);
 });
 
-test('seeded sample content is labeled and internally consistent', () => {
-  assert.equal(SEED_POLLS.length, 4);
+test('seeded content is consistent and authored by a sample account', () => {
+  assert.equal(SEED_POLLS.length, 12);
   assert.equal(new Set(SEED_POLLS.map((poll) => poll.id)).size, SEED_POLLS.length);
-  assert.ok(SEED_POLLS.every((poll) => poll.isSample === true));
-  assert.ok(SEED_POLLS.some((poll) => tallyPoll(poll, []).hasEnough));
-  assert.ok(SEED_POLLS.some((poll) => !tallyPoll(poll, []).hasEnough));
+  // Seeded content ships with no response counts, so results stay hidden
+  // until real residents answer (export stays locked too).
+  assert.ok(SEED_POLLS.every((poll) => tallyPoll(poll, []).total === 0));
+  assert.ok(SEED_POLLS.every((poll) => !tallyPoll(poll, []).hasEnough));
+  assert.ok(!tallyPoll(SEED_POLLS[0], []).usingSampleData);
   assert.ok(SEED_POLLS.some((poll) => pollPhase(poll, NOW) === 'closed'));
   assert.ok(SEED_POLLS.some((poll) => pollPhase(poll, NOW) === 'scheduled'));
 
   for (const poll of SEED_POLLS) {
+    assert.ok(SAMPLE_ACCOUNT_IDS.has(poll.createdBy), `${poll.id} needs a sample author`);
+    assert.ok(['draft', 'scheduled', 'open', 'closed', 'archived'].includes(poll.status),
+      `${poll.id} has an unknown status`);
     assert.ok(POLL_TYPES.some((type) => type.id === poll.type), `${poll.id} has an unknown type`);
     assert.ok(poll.options.length >= 2 && poll.options.length <= 6, `${poll.id} needs 2 to 6 options`);
     assert.ok(poll.audience.length > 0, `${poll.id} needs an audience`);
@@ -158,7 +166,7 @@ test('seeded sample content is labeled and internally consistent', () => {
   }
 
   for (const announcement of SEED_ANNOUNCEMENTS) {
-    assert.equal(announcement.isSample, true);
+    assert.ok(SAMPLE_ACCOUNT_IDS.has(announcement.createdBy), `${announcement.id} needs a sample author`);
     assert.ok(['draft', 'scheduled', 'published', 'archived'].includes(announcement.status));
     for (const id of announcement.audience) {
       assert.ok(getJurisdiction(id), `${announcement.id} targets unknown area ${id}`);
@@ -166,7 +174,6 @@ test('seeded sample content is labeled and internally consistent', () => {
   }
 
   for (const question of SEED_QUESTIONS) {
-    assert.equal(question.isSample, true);
     assert.ok(getJurisdiction(question.jurisdictionId));
     assert.ok(['new', 'replied', 'resolved'].includes(question.status));
   }

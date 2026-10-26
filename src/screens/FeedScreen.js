@@ -9,14 +9,12 @@ import Badge from '../components/Badge';
 import Notice from '../components/Notice';
 import EmptyState from '../components/EmptyState';
 import { categoryLabel } from '../data/seedContent';
-import { labelForVA10 } from '../data/jurisdictions';
 import { audienceLabel, closesInLabel, findVote, pollPhase, pollTypeLabel } from '../lib/polls';
 import { REPORT_REASONS } from '../lib/moderation';
 import { formatDate } from '../lib/format';
 import { colors, spacing, radius, font, text } from '../theme';
 
-// The resident side of the feed. Everything here is sample content stored on
-// the device; there is no server delivering real office announcements yet.
+// The resident side of the feed of announcements and polls for the chosen area.
 export default function FeedScreen() {
   const nav = useNav();
   const {
@@ -35,8 +33,7 @@ export default function FeedScreen() {
   const [reportOpen, setReportOpen] = useState(null);
   const [reported, setReported] = useState([]);
 
-  // One reporting control per post. Reports stay on this device in the demo,
-  // and the sample administrator can see them in the portal.
+  // One reporting control per post; reports are reviewed by portal staff.
   const handleReport = (key, type, id, reason) => {
     reportContent({ targetType: type, targetId: id, reason: reason.id });
     setReported((current) => [...current, key]);
@@ -53,7 +50,7 @@ export default function FeedScreen() {
   return (
     <Screen
       title="Updates for your area"
-      subtitle="Announcements and polls from the sample office. This demo feed is stored on your device."
+      subtitle="Announcements and polls from your local offices."
       onBack={nav.pop}
       headerRight={
         unreadCount > 0 ? (
@@ -78,7 +75,7 @@ export default function FeedScreen() {
         <View style={styles.areaBody}>
           <Text style={styles.areaLabel}>Showing updates for</Text>
           <Text style={styles.areaName}>{jurisdiction.name}</Text>
-          <Text style={styles.areaFlag}>{labelForVA10(jurisdiction.inVA10)}</Text>
+          <Text style={styles.areaFlag}>{jurisdiction.type === 'county' ? 'County' : 'City'}</Text>
         </View>
         <Button
           label="Change area"
@@ -91,15 +88,9 @@ export default function FeedScreen() {
 
       {prefsOff ? (
         <Notice tone="warning" title="Updates are turned off for this area">
-          Your notification settings are hiding this feed. Turn them back on to see sample updates.
+          Your notification settings are hiding this feed. Turn them back on to see updates.
         </Notice>
       ) : null}
-
-      <Notice tone="info" title="Demo feed with sample data">
-        These announcements and polls come from a sample organization, not from a real county or
-        city office. The in-app feed is the only delivery channel CivLink actually implements; push
-        notifications and email are not connected.
-      </Notice>
 
       <View style={styles.actionRow}>
         <Pressable
@@ -124,7 +115,7 @@ export default function FeedScreen() {
         <EmptyState
           icon="📭"
           title="No updates for this area yet"
-          body="The sample office has not published anything for this locality, or your notification settings are hiding it. You can switch areas or ask a question."
+          body="Nothing has been published for this area yet, or your notification settings are hiding it. You can switch areas or ask a question."
           actionLabel="Choose your area"
           onAction={() => nav.push('Jurisdiction')}
         />
@@ -143,7 +134,6 @@ export default function FeedScreen() {
                 <View style={styles.cardTop}>
                   <Text style={styles.cardKind}>Poll</Text>
                   <View style={styles.badgeRow}>
-                    {item.isSample ? <Badge label="Sample" tone="teal" /> : null}
                     {isUnread ? <Badge label="New" tone="warning" /> : null}
                     {voted ? <Badge label="Responded" tone="success" dot /> : null}
                   </View>
@@ -160,7 +150,7 @@ export default function FeedScreen() {
                 />
                 <View style={styles.reportBlock}>
                   {reported.includes(`poll:${item.id}`) ? (
-                    <Text style={styles.reportThanks}>Reported. The sample office will review it.</Text>
+                    <Text style={styles.reportThanks}>Reported. Staff will review it.</Text>
                   ) : reportOpen === `poll:${item.id}` ? (
                     <View>
                       <Text style={styles.reportTitle}>Why are you reporting this?</Text>
@@ -205,7 +195,6 @@ export default function FeedScreen() {
               <View style={styles.cardTop}>
                 <Text style={styles.cardKind}>Announcement</Text>
                 <View style={styles.badgeRow}>
-                  {item.isSample ? <Badge label="Sample" tone="teal" /> : null}
                   {isUnread ? <Badge label="New" tone="warning" /> : null}
                 </View>
               </View>
@@ -223,9 +212,8 @@ export default function FeedScreen() {
                 <Text style={styles.readBtnText}>{expanded ? 'Show less' : 'Read announcement'}</Text>
               </Pressable>
               <View style={styles.reportBlock}>
-                {reported.includes(`announcement:${item.id}`) ? (
-                  <Text style={styles.reportThanks}>Reported. The sample office will review it.</Text>
-                ) : reportOpen === `announcement:${item.id}` ? (
+                {reported.includes(`announcement:${item.id}`) ? (                    <Text style={styles.reportThanks}>Reported. Staff will review it.</Text>
+                  ) : reportOpen === `announcement:${item.id}` ? (
                   <View>
                     <Text style={styles.reportTitle}>Why are you reporting this?</Text>
                     {REPORT_REASONS.map((reason) => (
@@ -267,8 +255,7 @@ export default function FeedScreen() {
       )}
 
       <Text style={styles.footnote}>
-        Sample announcements and polls are labeled wherever they appear. A real rollout would keep
-        this content on a server and deliver it only to residents of the chosen localities.
+        Announcements and polls are delivered only to the localities the publishing office chooses.
       </Text>
     </Screen>
   );

@@ -44,17 +44,12 @@ export default function AskScreen() {
   return (
     <Screen
       title="Ask a question"
-      subtitle={`Write to the sample office that serves ${jurisdiction.name}.`}
+      subtitle={`Write to the office that serves ${jurisdiction.name}.`}
       onBack={nav.pop}
       footer={<Button label="Back to updates" variant="secondary" onPress={() => nav.replace('Feed')} />}
     >
-      <Notice tone="info" title="Sample inbox">
-        This question goes into a sample inbox stored on your device, so you can see how the official
-        side would read and answer it. No real office receives it, and nothing leaves your device.
-      </Notice>
-
       {sent ? (
-        <Notice tone="success" title="Your question was added to the sample inbox">
+        <Notice tone="success" title="Your question was sent to the office inbox">
           You can see it in the list below. On the official side, the same question appears as an
           unread resident question.
         </Notice>
@@ -77,7 +72,7 @@ export default function AskScreen() {
         multiline
         maxLength={600}
         hint="At least 20 characters. Include where the issue is and what you would like done."
-        accessibilityLabel="Your question to the sample office"
+        accessibilityLabel="Your question to the office"
       />
 
       <Text style={styles.label}>Topic</Text>
@@ -133,7 +128,7 @@ export default function AskScreen() {
               {item.reply ? (
                 <View style={styles.replyBox}>
                   <View style={styles.replyTop}>
-                    <Text style={styles.replyLabel}>Reply from the sample office</Text>
+                    <Text style={styles.replyLabel}>Reply from the office</Text>
                     <Badge
                       label={item.reply.isPublic ? 'Public' : 'Private'}
                       tone={item.reply.isPublic ? 'teal' : 'neutral'}
@@ -156,8 +151,8 @@ export default function AskScreen() {
       )}
 
       <Text style={styles.footnote}>
-        A real inbox would need a server, verified official accounts, and a privacy policy covering
-        what staff can see. This prototype keeps everything on the device.
+        Replies come from office staff who can see your question and its topic. What you send is
+        covered by the content policy in the menu.
       </Text>
     </Screen>
   );

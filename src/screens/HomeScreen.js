@@ -6,7 +6,6 @@ import Button from '../components/Button';
 import Logo, { LogoMark } from '../components/Logo';
 import Badge from '../components/Badge';
 import { useCivic } from '../context/CivicContext';
-import { labelForVA10 } from '../data/jurisdictions';
 import { colors, spacing, radius, font, text } from '../theme';
 
 const STEPS = [
@@ -94,7 +93,7 @@ export default function HomeScreen() {
                   variant="secondary"
                   onPress={() => nav.push('Feed')}
                   style={styles.secondaryCta}
-                  accessibilityHint="Opens the sample announcement and poll feed for your area"
+                  accessibilityHint="Opens the announcement and poll feed for your area"
                 />
                 <Button
                   label="Browse offices of government"
@@ -141,14 +140,8 @@ export default function HomeScreen() {
             <View style={styles.areaBody}>
               <Text style={styles.areaName}>{jurisdiction.name}</Text>
               <Badge
-                label={labelForVA10(jurisdiction.inVA10)}
-                tone={
-                  jurisdiction.inVA10 === 'full'
-                    ? 'success'
-                    : jurisdiction.inVA10 === 'partial'
-                      ? 'warning'
-                      : 'neutral'
-                }
+                label={jurisdiction.type === 'county' ? 'County' : 'City'}
+                tone="neutral"
                 style={styles.areaBadge}
               />
               <Text style={styles.areaNote}>
@@ -205,9 +198,8 @@ export default function HomeScreen() {
           <View style={styles.officialBlock}>
             <Text style={styles.officialBlockTitle}>For elected officials and staff</Text>
             <Text style={styles.officialBlockBody}>
-              The CivLink Official Portal is a prototype of the office side: write a neutral poll or
-              announcement, publish it to the in-app feed, and see aggregate results and resident
-              questions. It uses sample data only and is not connected to any government office.
+              The CivLink Official Portal is the office side: write a neutral poll or announcement,
+              publish it to the in-app feed, and see aggregate results and resident questions.
             </Text>
             <Button
               label="Open the Official Portal"
@@ -242,7 +234,7 @@ export default function HomeScreen() {
             style={({ pressed }) => [styles.footerLink, pressed && styles.pressed]}
           >
             <Text style={styles.footerText}>
-              Built for the Congressional App Challenge · Virginia’s 10th District
+              Built for residents across Northern Virginia
             </Text>
             <Text style={styles.footerLinkText}>About, privacy & sources</Text>
           </Pressable>

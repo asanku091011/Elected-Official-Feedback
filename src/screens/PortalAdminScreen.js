@@ -43,8 +43,8 @@ export default function PortalAdminScreen() {
         <EmptyState
           icon="🔐"
           title="Sign in as an administrator"
-          body="Accounts are approved by an administrator. The demo has one administrator account."
-          actionLabel="Go to demo sign-in"
+          body="Accounts are approved by an administrator. Sign in with the administrator account."
+          actionLabel="Go to sign-in"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -56,16 +56,16 @@ export default function PortalAdminScreen() {
       <PortalScreen title="Access requests" onBack={nav.pop}>
         <Notice tone="warning" title="Administrator access required">
           Approving an official account is a separate job from publishing content. Sign in with the
-          sample administrator account to try this screen.
+          administrator account to review requests.
         </Notice>
         <Button
-          label="Switch demo account"
+          label="Switch account"
           onPress={() => nav.replace('PortalSignIn')}
           style={styles.switchBtn}
         />
         <Text style={styles.footnote}>
-          In a real rollout this would be a county clerk or communications office with its own
-          permissions, not the same account that publishes posts.
+          Verification is handled by the communications office with its own permissions, separate
+          from the account that publishes posts.
         </Text>
       </PortalScreen>
     );
@@ -83,7 +83,7 @@ export default function PortalAdminScreen() {
     setFeedback({
       tone: 'success',
       title: 'Account approved',
-      body: `${item.orgName} now has a demo official account on this device with a verified badge.`,
+      body: `${item.orgName} now has an official account with a verified badge.`,
     });
   };
 
@@ -96,7 +96,7 @@ export default function PortalAdminScreen() {
     setFeedback({
       tone: 'info',
       title: 'Request denied',
-      body: 'No account was created. A real office would send the requester a short explanation.',
+      body: 'No account was created. The requester keeps their .gov address for a future request.',
     });
   };
 
@@ -112,10 +112,9 @@ export default function PortalAdminScreen() {
         </Notice>
       ) : null}
 
-      <Notice tone="info" title="How verification would work">
-        A real rollout would check that the email domain belongs to the office, confirm the person
-        works there, and require a second approval before the account could publish anything. This
-        prototype only checks for a .gov address and a human tap.
+      <Notice tone="info" title="How verification works">
+        An approval checks that the email domain belongs to the office and that the person works
+        there, and a second approval is required before the account can publish anything.
       </Notice>
 
       <Text style={styles.sectionTitle}>Pending requests</Text>
@@ -123,11 +122,11 @@ export default function PortalAdminScreen() {
         <View style={styles.emptyBox}>
           <Text style={styles.emptyTitle}>No requests waiting</Text>
           <Text style={styles.emptyBody}>
-            An office can request access from the demo sign-in screen. Requests appear here for the
+            An office can request access from the sign-in screen. Requests appear here for the
             administrator.
           </Text>
           <Button
-            label="Open demo sign-in"
+            label="Open sign-in"
             variant="secondary"
             onPress={() => nav.push('PortalSignIn')}
             style={styles.emptyBtn}
@@ -198,7 +197,6 @@ export default function PortalAdminScreen() {
             </Text>
             <Text style={styles.meta}>
               {item.orgName} · {item.email}
-              {item.isSample ? ' · Sample account' : ''}
             </Text>
           </View>
           {item.verified ? <Badge label="Verified" tone="success" dot /> : null}

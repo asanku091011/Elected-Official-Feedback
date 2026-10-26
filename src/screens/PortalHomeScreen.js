@@ -12,11 +12,11 @@ import { ROLE_LABELS } from '../data/accounts';
 import { pollPhase } from '../lib/polls';
 import { colors, spacing, radius, font, text } from '../theme';
 
-const DEMO_STEPS = [
-  'Sign in with the sample staff account (no password in this prototype).',
+const START_STEPS = [
+  'Sign in with the CivLink staff account.',
   'Open Polls, create one, complete the neutrality checklist, and publish it.',
   'Switch to the resident side, open the feed, and respond from your area.',
-  'Come back to Poll results to watch the count and CSV export update.',
+  'Come back to Poll results to watch the count update.',
 ];
 
 // A large row that opens another portal screen. Kept local because only this
@@ -51,7 +51,7 @@ export default function PortalHomeScreen() {
     polls,
     announcements,
     accessRequests,
-    resetDemoData,
+    resetPortalData,
     signOut,
   } = useCivic();
   const [confirmReset, setConfirmReset] = useState(false);
@@ -60,14 +60,14 @@ export default function PortalHomeScreen() {
     return (
       <PortalScreen
         title="Official Portal"
-        subtitle="The office side of CivLink, shown with sample data only."
+        subtitle="The office side of CivLink."
         onBack={nav.pop}
       >
         <EmptyState
           icon="🏛️"
           title="Sign in to the Official Portal"
-          body="The portal is a prototype with sample organizations. Pick a demo account to see the office side."
-          actionLabel="Choose a demo account"
+          body="Sign in with an office account to manage polls, announcements, and resident questions."
+          actionLabel="Choose an account"
           onAction={() => nav.push('PortalSignIn')}
         />
         <Button
@@ -87,14 +87,14 @@ export default function PortalHomeScreen() {
       setConfirmReset(true);
       return;
     }
-    resetDemoData();
+    resetPortalData();
     nav.reset('PortalSignIn');
   };
 
   return (
     <PortalScreen
       title="Official Portal"
-      subtitle="A working prototype of the office side"
+      subtitle="The office side of CivLink"
       onBack={nav.pop}
       headerRight={<Badge label={ROLE_LABELS[role] || 'Official'} tone="teal" dot />}
     >
@@ -108,9 +108,8 @@ export default function PortalHomeScreen() {
       </View>
 
       <Notice tone="info" title="What these numbers include">
-        Total responses adds the sample response numbers that ship with the demo to any responses
-        recorded on this device. Sample numbers are labeled on the results screen; they are not real
-        constituent data.
+        Total responses counts every response recorded on this device. Open the results screen for
+        any poll to see its full tally.
       </Notice>
 
       <Text style={styles.sectionTitle}>Manage</Text>
@@ -153,25 +152,25 @@ export default function PortalHomeScreen() {
         accessibilityHint="Read the nonpartisan content rules"
       />
 
-      <Text style={styles.sectionTitle}>The 60-second demo path</Text>
-      <View style={styles.demoCard}>
-        {DEMO_STEPS.map((step, index) => (
-          <View key={step} style={styles.demoStep}>
-            <View style={styles.demoNum}>
-              <Text style={styles.demoNumText}>{index + 1}</Text>
+      <Text style={styles.sectionTitle}>How publishing works</Text>
+      <View style={styles.stepCard}>
+        {START_STEPS.map((step, index) => (
+          <View key={step} style={styles.stepItem}>
+            <View style={styles.stepNum}>
+              <Text style={styles.stepNumText}>{index + 1}</Text>
             </View>
-            <Text style={styles.demoText}>{step}</Text>
+            <Text style={styles.stepText}>{step}</Text>
           </View>
         ))}
         <Button
           label="Open the resident feed"
           variant="secondary"
           onPress={() => nav.push('Feed')}
-          style={styles.demoButton}
+          style={styles.stepsButton}
         />
       </View>
 
-      <Text style={styles.sectionTitle}>Demo controls</Text>
+      <Text style={styles.sectionTitle}>Account</Text>
       <Button
         label="Sign out and switch role"
         variant="secondary"
@@ -182,15 +181,16 @@ export default function PortalHomeScreen() {
         accessibilityHint="Returns to the resident app"
       />
       <Button
-        label={confirmReset ? 'Tap again to reset all demo data' : 'Reset demo data'}
+        label={confirmReset ? 'Tap again to reset portal content' : 'Reset portal content'}
         variant="danger"
         onPress={handleReset}
         style={styles.resetButton}
-        accessibilityHint="Restores the sample polls, announcements, and questions, and clears responses"
+        accessibilityHint="Restores the built-in polls, announcements, and questions, and clears responses"
       />
       <Text style={styles.resetNote}>
-        Resetting restores the sample polls, announcements, questions, and clears responses recorded
-        on this device. Saved resident messages are kept separately and are not deleted here.
+        Resetting restores the built-in polls, announcements, questions, and clears responses
+        recorded on this device. Saved resident messages are kept separately and are not deleted
+        here.
       </Text>
     </PortalScreen>
   );
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm,
     marginTop: -4,
   },
-  demoCard: {
+  stepCard: {
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
@@ -251,11 +251,11 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     marginBottom: spacing.sm,
   },
-  demoStep: {
+  stepItem: {
     flexDirection: 'row',
     marginBottom: spacing.sm + 2,
   },
-  demoNum: {
+  stepNum: {
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -266,19 +266,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: spacing.sm + 2,
   },
-  demoNumText: {
+  stepNumText: {
     fontFamily: font.family,
     fontSize: font.size.xs,
     fontWeight: font.weight.bold,
     color: colors.ink,
   },
-  demoText: {
+  stepText: {
     ...text.small,
     flex: 1,
     color: colors.ink,
     paddingTop: 2,
   },
-  demoButton: {
+  stepsButton: {
     marginTop: spacing.xs,
   },
   resetButton: {

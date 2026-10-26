@@ -42,7 +42,7 @@ export default function PollScreen({ pollId }) {
         <EmptyState
           icon="📊"
           title="That poll is not available"
-          body="It may have been removed by the sample office. Go back to the updates feed to see what is open."
+          body="It may have been removed by the office. Go back to the updates feed to see what is open."
           actionLabel="Back to updates"
           onAction={() => nav.replace('Feed')}
         />
@@ -100,7 +100,6 @@ export default function PollScreen({ pollId }) {
     >
       <Card style={styles.questionCard}>
         <View style={styles.badgeRow}>
-          {poll.isSample ? <Badge label="Sample poll" tone="teal" /> : null}
           <Badge
             label={phase === 'closed' ? 'Closed' : 'Open'}
             tone={phase === 'closed' ? 'neutral' : 'success'}
@@ -117,8 +116,7 @@ export default function PollScreen({ pollId }) {
 
       {submitted ? (
         <Notice tone="success" title="Thanks, your response was recorded">
-          Your answer is stored on this device and added to the results below. Nothing is sent to a
-          server, and no name or account is attached to it.
+          Your answer is added to the results below. No name or account is attached to it.
         </Notice>
       ) : null}
 
@@ -165,7 +163,6 @@ export default function PollScreen({ pollId }) {
           ) : (
             <Card style={styles.resultsCard}>
               <View style={styles.badgeRow}>
-                {tally.usingSampleData ? <Badge label="Sample responses" tone="teal" /> : null}
                 <Badge
                   label={`${tally.total} ${tally.total === 1 ? 'response' : 'responses'}`}
                   tone="neutral"
@@ -207,9 +204,7 @@ export default function PollScreen({ pollId }) {
           ) : null}
 
           <Text style={styles.footnote}>
-            {tally.usingSampleData
-              ? 'Sample responses are made-up numbers shipped with the prototype. They are mixed with responses recorded on this device and labeled wherever they appear.'
-              : 'These results include only responses recorded on this device. A real deployment would count them on a secure server.'}
+            Results are counted in aggregate only — no name or account is attached to a response.
           </Text>
         </View>
       ) : (

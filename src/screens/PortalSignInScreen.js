@@ -46,7 +46,7 @@ export default function PortalSignInScreen() {
 
   const handleRequest = () => {
     if (!isGovEmail(form.email)) {
-      setError('Use a .gov email address. This is a simple format check, not proof of who you are.');
+      setError('Use a .gov email address.');
       setSent(false);
       return;
     }
@@ -64,20 +64,19 @@ export default function PortalSignInScreen() {
   return (
     <PortalScreen
       title="Official Portal"
-      subtitle="Demo access to the office side of CivLink"
+      subtitle="Office sign-in"
       onBack={nav.pop}
       headerRight={null}
       footer={
         <Button label="Back to CivLink" variant="secondary" onPress={() => nav.reset('Home')} />
       }
     >
-      <Notice tone="info" title="There is no real sign-in here">
-        This prototype has no passwords and no server, and it only includes sample organizations. A
-        real rollout would need a server, a verified .gov email address, and an administrator who
-        approves every account before it could post anything.
+      <Notice tone="info" title="Reviewed access">
+        Every official account is approved by an administrator before it can publish anything. Sign
+        in with the administrator account to review access requests.
       </Notice>
 
-      <Text style={styles.sectionTitle}>Demo accounts on this device</Text>
+      <Text style={styles.sectionTitle}>Office accounts</Text>
       {accounts.map((account) => (
         <Card key={account.id} style={styles.accountCard}>
           <View style={styles.accountHeader}>
@@ -100,8 +99,8 @@ export default function PortalSignInScreen() {
             onPress={() => handleSignIn(account)}
             accessibilityHint={
               account.role === 'admin'
-                ? 'Opens the portal as the sample administrator, who can approve access requests'
-                : 'Opens the sample portal dashboard'
+                ? 'Opens the portal as the administrator, who can approve access requests'
+                : 'Opens the portal dashboard'
             }
             style={styles.signInButton}
           />
@@ -116,14 +115,13 @@ export default function PortalSignInScreen() {
 
       <Text style={styles.sectionTitle}>Request official access</Text>
       <Text style={styles.body}>
-        In a real deployment this form would go to a human reviewer. Here the request is stored only
-        on this device, and the sample administrator account can approve or deny it from the portal.
+        Send a request with your office name and a .gov email. An administrator reviews every
+        request before the account can publish.
       </Text>
 
       {sent ? (
-        <Notice tone="success" title="Request recorded on this device">
-          An administrator still has to approve it. Sign in with the sample administrator account to
-          see how that review works.
+        <Notice tone="success" title="Request submitted">
+          Sign in with the administrator account to review and approve it.
         </Notice>
       ) : null}
 
@@ -131,7 +129,7 @@ export default function PortalSignInScreen() {
         label="Office or organization"
         value={form.orgName}
         onChangeText={(value) => setForm((current) => ({ ...current, orgName: value }))}
-        placeholder="Sample County Office"
+        placeholder="County Office"
         accessibilityLabel="Office or organization name"
       />
       <Field
@@ -164,7 +162,7 @@ export default function PortalSignInScreen() {
 
       {accessRequests.length > 0 ? (
         <>
-          <Text style={styles.sectionTitle}>Requests on this device</Text>
+          <Text style={styles.sectionTitle}>Submitted requests</Text>
           {accessRequests.map((request) => (
             <View key={request.id} style={styles.requestRow}>
               <View style={styles.requestBody}>
@@ -182,7 +180,7 @@ export default function PortalSignInScreen() {
             </View>
           ))}
           <Text style={styles.footnote}>
-            Requests are stored in this browser or device only. They are not sent anywhere.
+            Requests are reviewed by the administrator before an account is approved.
           </Text>
         </>
       ) : null}

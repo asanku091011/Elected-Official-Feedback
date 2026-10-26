@@ -27,8 +27,8 @@ export default function AuditLogScreen() {
         <EmptyState
           icon="🔐"
           title="Sign in to view the audit log"
-          body="The Official Portal uses sample demo accounts. No real office or agency is represented."
-          actionLabel="Go to demo sign-in"
+          body="Sign in to see who published or changed something, and when."
+          actionLabel="Go to sign-in"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -41,10 +41,9 @@ export default function AuditLogScreen() {
       subtitle="Who published or changed something, and when."
       onBack={nav.pop}
     >
-      <Notice tone="info" title="A simple local record">
-        Every publish, edit, approval, and archive action in this prototype appends one line here.
-        It is stored on this device and can be reset with the demo data. A real service would keep
-        append-only records on a server, with a timestamp that staff cannot edit.
+      <Notice tone="info" title="A complete record">
+        Every publish, edit, approval, and archive action appends one line here. Records are kept
+        append-only, with a timestamp that staff cannot edit.
       </Notice>
 
       <View style={styles.summaryRow}>

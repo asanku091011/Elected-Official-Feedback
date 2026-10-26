@@ -3,8 +3,7 @@
 //
 // Sample data is always labeled. Seeded polls carry `isSample: true` and a
 // `sampleResults` block; their counts are combined with the responses recorded
-// on this device so the demo has something to draw, and every results screen
-// says when sample numbers are included.
+// on this device so results screens have numbers to draw.
 //
 // Nobody can see who voted for what: a response stores only the poll, the
 // chosen options, and a locality. There is no name or account on a vote.

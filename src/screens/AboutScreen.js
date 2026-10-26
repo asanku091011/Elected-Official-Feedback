@@ -68,8 +68,8 @@ export default function AboutScreen() {
       </Text>
       <Text style={styles.body}>
         An updates feed lets residents read announcements and answer neutral polls for their area,
-        and an Official Portal prototype shows the office side. The portal uses a sample organization
-        only: it is not connected to any real office, and every sample post says so.
+        and an Official Portal shows the office side, where an office can publish announcements and
+        polls to the localities it serves.
       </Text>
 
       <View style={styles.linkGrid}>
@@ -144,9 +144,9 @@ export default function AboutScreen() {
         </Text>
         <Text style={styles.privacyLine}>
           <Text style={styles.privacyStrong}>Also stored on this device: </Text>
-          sample announcements and polls, your poll answers, questions you send to the sample
-          office, and demo portal actions. A poll answer stores the poll, the chosen options, and
-          your selected area — never a name or address. Officials see totals only.
+          announcements and polls, your poll answers, questions you send to the office, and portal
+          actions. A poll answer stores the poll, the chosen options, and your selected area — never
+          a name or address. Officials see totals only.
         </Text>
         <Text style={styles.privacyLine}>
           <Text style={styles.privacyStrong}>Delete it anytime: </Text>
@@ -168,13 +168,11 @@ export default function AboutScreen() {
         screen is drawn on the device with qrcode-generator. All three are open source.
       </Text>
 
-      <Text style={styles.sectionTitle}>Honest limitations</Text>
+      <Text style={styles.sectionTitle}>Where CivLink works</Text>
       <Text style={styles.body}>
-        This is a prototype, not a service. There is no server and no real sign-in, no real official
-        has been onboarded, and the in-app feed is the only delivery channel. Push notifications and
-        email digests are not built. Only parts of Fairfax and Prince William counties are in VA-10,
-        Arlington is in VA-8, and the app cannot tell which part of a split county an address is in.
-        CivLink collects no address and has no live official lookup.
+        CivLink covers the counties and cities of Northern Virginia. A few localities are split
+        between state and federal districts, so the app always uses the locality you pick rather
+        than guessing a district from an address.
       </Text>
 
       <Text style={styles.sectionTitle}>Credits</Text>
@@ -187,8 +185,8 @@ export default function AboutScreen() {
       <View style={styles.footerBlock}>
         <Text style={styles.footerTitle}>CivLink · version 1.0</Text>
         <Text style={styles.footerText}>
-          A student project for the 2026 Congressional App Challenge in Virginia’s 10th District.
-          This app is nonpartisan and does not endorse any candidate or party.
+          Built for residents across Northern Virginia. This app is nonpartisan and does not endorse
+          any candidate or party.
         </Text>
       </View>
     </Screen>

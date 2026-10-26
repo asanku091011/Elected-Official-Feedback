@@ -3,12 +3,11 @@ import { Text, StyleSheet } from 'react-native';
 import { useNav } from '../navigation/Navigator';
 import Screen from '../components/Screen';
 import Card from '../components/Card';
-import Badge from '../components/Badge';
 import Button from '../components/Button';
 import ExternalLink from '../components/ExternalLink';
 import EmptyState from '../components/EmptyState';
 import Notice from '../components/Notice';
-import { getJurisdiction, labelForVA10 } from '../data/jurisdictions';
+import { getJurisdiction } from '../data/jurisdictions';
 import { formatDate } from '../lib/format';
 import { colors, spacing, font, text } from '../theme';
 
@@ -19,8 +18,6 @@ const KIND_LABELS = {
   comment: 'Public comment',
   contact: 'Contact',
 };
-
-const TONE = { full: 'success', partial: 'warning', no: 'neutral' };
 
 export default function LocalGovernmentScreen({ jurisdictionId }) {
   const nav = useNav();
@@ -53,11 +50,6 @@ export default function LocalGovernmentScreen({ jurisdictionId }) {
         />
       }
     >
-      <Badge
-        label={labelForVA10(locality.inVA10)}
-        tone={TONE[locality.inVA10] || 'neutral'}
-        style={styles.badge}
-      />
       <Text style={styles.note}>{locality.note}</Text>
 
       <Text style={styles.sectionTitle}>Official pages</Text>

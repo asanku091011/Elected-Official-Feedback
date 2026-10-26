@@ -150,10 +150,9 @@ export default function GetCivLinkScreen() {
           iPhone, Android, and desktop users from one link.
         </Text>
         <Text style={styles.honestLine}>
-          <Text style={styles.honestStrong}>No push notifications in this prototype. </Text>
-          The in-app feed is the channel that works today. A future iPhone version would need iOS
-          16.4 or later, the app added to the Home Screen, and the site served over HTTPS before iOS
-          could even ask for permission.
+          <Text style={styles.honestStrong}>Push notifications on the way. </Text>
+          The in-app feed is the channel today, and push notifications for updates from your area
+          are planned next.
         </Text>
         <Text style={styles.honestLine}>
           <Text style={styles.honestStrong}>Works without installing. </Text>

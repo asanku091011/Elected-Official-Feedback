@@ -43,10 +43,9 @@ export default function NotificationSettingsScreen() {
         </View>
       }
     >
-      <Notice tone="info" title="In-app only">
-        These settings control what appears in CivLink’s update feed and whether it counts toward the
-        unread badge. This prototype sends no push notifications or email digests, and the
-        preferences stay on this device.
+      <Notice tone="info" title="How notifications work">
+        These settings control what appears in CivLink’s update feed and whether it counts toward
+        the unread badge. Push notifications for these categories are planned next.
       </Notice>
 
       <Text style={styles.summary}>
@@ -74,7 +73,6 @@ export default function NotificationSettingsScreen() {
         <CheckRow
           key={item.id}
           label={item.name}
-          description={item.inVA10 === 'no' ? 'Outside VA-10, kept as an expansion area' : undefined}
           checked={jurisdictions[item.id] !== false}
           onToggle={() =>
             setNotificationPrefs({ jurisdictions: { [item.id]: jurisdictions[item.id] === false } })
@@ -115,9 +113,7 @@ export default function NotificationSettingsScreen() {
       </View>
 
       <Text style={styles.footnote}>
-        A real rollout would need a server, a verified account, and a separate permission prompt for
-        each device before any notification could be sent. CivLink does not pretend to have that
-        yet.
+        Preferences are saved for this device and apply every time you open CivLink.
       </Text>
     </Screen>
   );

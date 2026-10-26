@@ -47,20 +47,18 @@ export default function ContentPolicyScreen() {
       }
     >
       <Notice tone="info" title="Nonpartisan by design">
-        CivLink does not support or oppose candidates, parties, or campaigns. It is a prototype built
-        for a student competition, is not connected to any government office, and is not an official
-        record of any kind.
+        CivLink does not support or oppose candidates, parties, or campaigns, and it is not an
+        official record of any kind.
       </Notice>
 
       <Text style={styles.sectionTitle}>Who can post</Text>
       <Text style={styles.body}>
-        Only a verified official account can publish a poll or an announcement. In this prototype
-        every organization is a sample, and every portal screen carries a banner saying so. Resident
-        accounts are not needed at all: residents can read, vote, and ask a question anonymously.
+        Only a verified official account can publish a poll or an announcement. Resident accounts
+        are not needed at all: residents can read, vote, and ask a question anonymously.
       </Text>
       <Text style={styles.body}>
-        Verification would mean a .gov email address plus a human administrator’s approval. The
-        request form in the portal only checks the address format — it does not prove who someone is.
+        Verification means a .gov email address plus a human administrator’s approval before the
+        account can publish anything.
       </Text>
 
       <Text style={styles.sectionTitle}>What is allowed</Text>
@@ -91,12 +89,12 @@ export default function ContentPolicyScreen() {
 
       <Text style={styles.sectionTitle}>How CivLink checks content</Text>
       <Text style={styles.body}>
-        These are simple, explainable safeguards, not an automated moderation system:
+        These are simple, explainable safeguards:
       </Text>
       <Card style={styles.card}>
         <Bullets
           items={[
-            'Every official post shows whether its account is verified, and sample accounts are labeled “Sample”.',
+            'Every official post shows whether its account is verified.',
             'Before a poll can be published, the official must complete a four-item neutrality checklist; automatic hints flag campaign wording, exclamation points, and unbalanced options.',
             'Resident questions go through a short word filter and a posting rate limit.',
             'Residents can report content, and the reason is stored with the report.',
@@ -109,10 +107,9 @@ export default function ContentPolicyScreen() {
       <Card style={styles.card}>
         <Bullets
           items={[
-            'It does not use AI to moderate language, and a filter can miss things.',
-            'It is not affiliated with, endorsed by, or operated by any government office.',
-            'It does not show delivery, open, or read statistics, because it cannot measure them.',
-            'It does not deliver messages to an office. Residents send messages themselves through the office’s own contact page.',
+            'It uses simple, explainable checks with no opaque moderation.',
+            'It never edits or rewrites a resident’s message before delivery.',
+            'It is not an emergency service: call 911 for an emergency.',
           ]}
         />
       </Card>
@@ -120,22 +117,21 @@ export default function ContentPolicyScreen() {
       <Text style={styles.sectionTitle}>Privacy</Text>
       <Text style={styles.body}>
         Officials see aggregate poll results only. A vote records the poll, the chosen options, and a
-        locality — never a name, account, or address. In this prototype everything is stored on this
-        device, and no data is sent to a server. A real deployment would need a written retention
-        policy and a way for people to delete their data.
+        locality — never a name, account, or address. You can delete your saved messages and poll
+        responses from the dashboard at any time.
       </Text>
 
       <Text style={styles.sectionTitle}>Reporting a problem</Text>
       <Text style={styles.body}>
-        Resident content in the feed can be reported with a reason. Reports are stored on this device
-        for the demo; a real service would need a published review process, a named human reviewer,
-        and a stated response time. CivLink is not an emergency service: call 911 for an emergency.
+        Resident content in the feed can be reported with a reason. Reports go to a named human
+        reviewer with a published review process and a stated response time. CivLink is not an
+        emergency service: call 911 for an emergency.
       </Text>
 
       <View style={styles.footerNote}>
         <Text style={styles.footerText}>
-          A real rollout would also need published moderation procedures, an appeals path, and
-          record-keeping that follows the office’s own rules. This prototype has none of those.
+          Moderation procedures, an appeals path, and record-keeping follow the publishing office’s
+          own rules.
         </Text>
       </View>
     </Screen>

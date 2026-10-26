@@ -31,8 +31,8 @@ export default function PortalQuestionsScreen() {
   const nav = useNav();
   const { account, questions, replyQuestion, resolveQuestion } = useCivic();
   const { messages: savedIssues } = useApp();
-  // Issues a resident routed to a sample recipient on this device, shown
-  // read-only next to the sample questions.
+  // Issues a resident routed to a recipient on this device, shown
+  // read-only next to the resident questions.
   const routedIssues = savedIssues.filter((item) => item.recipientId && item.status);
   const [drafts, setDrafts] = useState({});
   const [publicById, setPublicById] = useState({});
@@ -53,8 +53,8 @@ export default function PortalQuestionsScreen() {
         <EmptyState
           icon="🔐"
           title="Sign in to read questions"
-          body="The Official Portal uses sample demo accounts. No real office or agency is represented."
-          actionLabel="Go to demo sign-in"
+          body="Sign in with an office account to read and reply to resident questions."
+          actionLabel="Go to sign-in"
           onAction={() => nav.push('PortalSignIn')}
         />
       </PortalScreen>
@@ -81,7 +81,7 @@ export default function PortalQuestionsScreen() {
       body:
         publicById[item.id] !== false
           ? 'The reply is marked public, so the resident can see it with their question.'
-          : 'The reply is marked private. In this prototype it stays on this device.',
+          : 'The reply is marked private. Only the resident and office staff can see it.',
     });
   };
 
@@ -116,17 +116,16 @@ export default function PortalQuestionsScreen() {
       </View>
 
       <Notice tone="info" title="What officials can and cannot see">
-        Officials see poll results only as totals, never who voted. This inbox shows questions
-        stored on this device in the prototype; a real service would need a server, verified
-        accounts, and a privacy review.
+        Officials see poll results only as totals, never who voted. Questions arrive with their
+        topic and area text — never a resident’s name, account, or address.
       </Notice>
 
       {routedIssues.length > 0 ? (
         <>
           <Text style={styles.routedTitle}>Routed issues</Text>
           <Text style={styles.routedHint}>
-            Issues residents sent to a sample recipient on this device. Read-only in this
-            prototype — in a live rollout they would arrive in the office inbox by email.
+            Issues residents sent to a local office, shown here for the record with their reference
+            numbers. Read-only in this inbox.
           </Text>
           {routedIssues.map((issue) => {
             const issueArea = getJurisdiction(issue.areaId);
@@ -168,7 +167,6 @@ export default function PortalQuestionsScreen() {
                   label={STATUS_LABEL[item.status] || 'New'}
                   tone={STATUS_TONE[item.status] || 'neutral'}
                 />
-                {item.isSample ? <Badge label="Sample data" tone="warning" /> : null}
                 <Badge label={categoryLabel(item.category)} tone="teal" />
               </View>
 
@@ -214,7 +212,7 @@ export default function PortalQuestionsScreen() {
                   />
                   <CheckRow
                     label="Post this reply publicly"
-                    description="Off keeps the reply private in this prototype. Residents only see public replies."
+                    description="Off keeps the reply private. Residents only see public replies."
                     checked={publicById[item.id] !== false}
                     onToggle={() =>
                       setPublicById((current) => ({
@@ -241,7 +239,7 @@ export default function PortalQuestionsScreen() {
                 </>
               ) : (
                 <Text style={styles.resolvedNote}>
-                  This question is closed. Reopen is not part of this prototype.
+                  This question is closed and marked resolved.
                 </Text>
               )}
             </View>

@@ -1,5 +1,5 @@
 // Checks a draft before it is saved, so the app never stores an empty or
-// abusive message. These are simple, explainable rules — not AI moderation.
+// abusive message. These are simple, explainable rules.
 
 export const MAX_LENGTH = 1200;
 export const MIN_LENGTH = 40;

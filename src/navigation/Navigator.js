@@ -81,8 +81,17 @@ export default function Navigator() {
   }, []);
 
   const pop = useCallback(() => {
-    setStack((current) => (current.length > 1 ? current.slice(0, -1) : current));
-  }, []);
+    // A stack reset (for example the portal sign-in flow) can leave a single
+    // screen on top, where popping would do nothing and trap the user. Falling
+    // back to the home screen keeps the back arrow working everywhere.
+    if (stack.length <= 1) {
+      if (stack[0] && stack[0].name !== 'Home') {
+        setStack([{ name: 'Home', params: {}, key: nextKey++ }]);
+      }
+      return;
+    }
+    setStack((current) => current.slice(0, -1));
+  }, [stack]);
 
   const reset = useCallback((name = 'Home', params = {}) => {
     setStack([{ name, params, key: nextKey++ }]);

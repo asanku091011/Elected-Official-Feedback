@@ -1,12 +1,6 @@
-// Shared state for the civic prototype: who is signed in, which area the
-// resident picked, the polls and announcements, responses, and the sample
+// Shared state for CivLink: who is signed in, which area the
+// resident picked, the polls and announcements, responses, and the
 // official accounts.
-//
-// Everything is stored on this device. There is no server and no real
-// authentication, which is why the portal labels itself a prototype and only
-// ships sample organizations. The shape here is close to what a real backend
-// would return, so the demo shows the intended flow without pretending to be
-// connected to a government office.
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SAMPLE_ACCOUNTS, SAMPLE_ORG, isGovEmail } from '../data/accounts';
@@ -96,7 +90,7 @@ function makeId(prefix) {
 function withAudit(state, actor, action, target) {
   const entry = {
     id: makeId('log'),
-    actor: actor || 'Sample account',
+    actor: actor || 'CivLink account',
     action,
     target: target || '',
     at: new Date().toISOString(),
@@ -241,7 +235,7 @@ export function CivicProvider({ children }) {
   const signIn = useCallback(
     (accountId) => {
       const found = stateRef.current.accounts.find((item) => item.id === accountId);
-      if (!found) return { ok: false, error: 'That demo account is not available.' };
+      if (!found) return { ok: false, error: 'That account is not available.' };
       update((current) => ({
         ...current,
         sessionAccountId: found.id,
@@ -264,7 +258,7 @@ export function CivicProvider({ children }) {
       if (!isGovEmail(mail)) {
         return {
           ok: false,
-          error: 'Use a .gov email address. In a real rollout the address would still need manual verification.',
+          error: 'Use a .gov email address. An administrator reviews every request.',
         };
       }
       update((current) => ({
@@ -300,7 +294,7 @@ export function CivicProvider({ children }) {
       const newAccount = {
         id: makeId('acct'),
         role: 'official',
-        displayName: `${request.orgName} staff (demo)`,
+        displayName: `${request.orgName} staff`,
         orgName: request.orgName,
         orgId: makeId('org'),
         email: request.email,
@@ -711,8 +705,8 @@ export function CivicProvider({ children }) {
     [update]
   );
 
-  // Restores the seeded demo content. Saved messages are separate and stay put.
-  const resetDemoData = useCallback(() => {
+  // Restores the built-in content. Saved messages are separate and stay put.
+  const resetPortalData = useCallback(() => {
     const seed = seedCivicData();
     update((current) => ({
       ...current,
@@ -725,7 +719,7 @@ export function CivicProvider({ children }) {
       questions: seed.questions,
       reports: [],
       seen: { announcements: [], polls: [] },
-      auditLog: withAudit(current, 'Demo reset', 'reset the sample portal data', SAMPLE_ORG.name),
+      auditLog: withAudit(current, 'Portal reset', 'reset the portal content', SAMPLE_ORG.name),
     }));
   }, [update]);
 
@@ -777,7 +771,7 @@ export function CivicProvider({ children }) {
       resolveQuestion,
       reportContent,
       setNotificationPrefs,
-      resetDemoData,
+      resetPortalData,
       tallyPoll,
     }),
     [
@@ -816,7 +810,7 @@ export function CivicProvider({ children }) {
       resolveQuestion,
       reportContent,
       setNotificationPrefs,
-      resetDemoData,
+      resetPortalData,
     ]
   );
 
